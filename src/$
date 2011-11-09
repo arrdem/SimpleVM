@@ -1,0 +1,175 @@
+#!/usr/bin/python
+# Test implementation of the SimpleVM. Final deployed version will be in C.
+#
+
+import sys
+
+# define classes....
+class VMObject:
+   """serves as an abstraction for __any__ data in interpreter memory"""
+   __type = None;
+   __data = None;
+   __addr = None;
+
+    def __init__(self, type):
+        self.__type = type;
+
+    def __init__(self, type, data):
+        self.__type = type;
+        self.__data = data;
+
+    def __init__(self, type, data, addr):
+        self.__type = type;
+        self.__data = data;
+        self.__addr = addr;
+
+    def type(this):
+        return this.__type;
+
+    def set_type(this, type):
+        this.__type = type;
+
+    def addr(this):
+        return this.__addr;
+
+    def data(this):
+        return this.__data;
+
+    def set_data(this, data):
+        this.__data = data;
+
+# define magic numbers
+INTEGER = 1
+BIT     = 2
+STACK   = 3
+POINTER = 4
+
+def load(f):
+    """loads a file of some type into program memory for parsing"""
+    if f is str:
+        return open(file).readlines()
+    if f is file:
+        return f.readlines();
+
+def parse(l):
+    """parses loaded code into a parse tree for eval()"""
+    return [i.upper().split(" ") for i in l]
+
+def eval(env, line, code):
+    """executes loaded code"""
+    # env is a string:VMObject map representing the VM's memory
+    # line is an integer representing the line under hte cursor
+    # code is a list of lists of strings representing the parse tree of each
+    #   line of "assembler" code
+
+    if(len(code) <= line): sys.exit(1, "[EVAL] BAD LINE NUMBER");
+    else: l = code[line]
+    if(len(l) == 0) or (len(l) > 4): sys.exit(1, "[EVAL] LINE TOO LONG : %n" % (line))
+    
+    # bitches love math... do it first!
+    if(l[0]=="ADD"):
+        if(len(l) < 3):
+            sys.exit(1, "[EVAL[ADD]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[ADD]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() + env[l[2]].data())
+    
+    elif(l[0]=="SUB"):
+        if(len(l) < 3):
+            sys.exit(1, "[EVAL[SUB]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[SUB]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() - env[l[2]].data())
+
+    elif(l[0]=="MUL"):
+        if(len(l) < 3):
+            sys.exit(1, "[EVAL[MUL]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[MUL]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() * env[l[2]].data())
+
+    elif(l[0]=="DIV"):
+        if(len(l) < 3):
+            sys.exit(1, "[EVAL[DIV]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[DIV]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() / env[l[2]].data())
+
+    elif(l[0]=="MOD"):
+         if(len(l) < 3):
+            sys.exit(1, "[EVAL[MOD]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[MOD]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() % env[l[2]].data())
+
+   elif(l[0]=="OR"):
+          if(len(l) < 3):
+            sys.exit(1, "[EVAL[OR]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == BIT), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[OR]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() or env[l[2]].data())
+
+  elif(l[0]=="AND"):
+         if(len(l) < 3):
+            sys.exit(1, "[EVAL[AND]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == BIT), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[AND]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() and env[l[2]].data())
+
+   elif(l[0]=="NOT"):
+         if(len(l) < 2):
+            sys.exit(1, "[EVAL[NOT]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == BIT), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[NOT]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[2]].set_data(not env[l[1]].data())
+
+   elif(l[0]=="XOR"):
+         if(len(l) < 3):
+            sys.exit(1, "[EVAL[XOR]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[XOR]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[3]].set_data(env[l[1]].data() != env[l[2]].data())
+
+   elif(l[0] in ["RSFT", "LSFT"]):
+         if(len(l) < 3):
+            sys.exit(1, "[EVAL[DIV]] TOO FEW OPTS : %n" % (line))
+        elif(False in map((lambda x: x.type == INTEGER), [env[i] for i in l[0:]])):
+            sys.exit(1, "[EVAL[DIV]] TYPE MISMATCH : %n" % (line))
+        else:
+            env[l[2]].set_data(!env[l[2]].data())
+
+    elif(l[0]=="DINT")
+    elif(l[0]=="DBIT")
+    elif(l[0]=="DPTR")
+    elif(l[0]=="SWAP")
+    elif(l[0]=="MCPY")
+    elif(l[0]=="DEL")
+    elif(l[0]=="GOTO"):
+        return int(l[1])
+    elif(l[0]=="HALT"):
+        sys.exit(0, "[EVAL[HALT]] SYSTEM TERMINATED!")
+    elif(l[0]=="PUSH")
+    elif(l[0]=="POP")
+    elif(l[0]=="INCR")
+    elif(l[0]=="DECR")
+    else: sys.exit(1, ("[EVAL] BAD COMMAND ON LINE %i" % (line)))
+
+    # on the off chance we make it this far XD
+    return line + 1
+
+if __name__ == "__main__" or 1:
+    code = load(sys.argv[1])
+    env = {}
+    env["null"] = VMObject(None, None, None)
+    env["
+    while(1):
+
