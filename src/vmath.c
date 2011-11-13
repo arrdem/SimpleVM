@@ -19,15 +19,23 @@ void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
         case '+':
             *ram->regs[f].ptr = d + e;
             break;
+
         case '-':
             *ram->regs[f].ptr = d - e;
             break;
+
         case '*':
             *ram->regs[f].ptr = d * e;
             break;
+
         case '/':
             *ram->regs[f].ptr = d / e;
             break;
+
+        case '%':
+            *ram->regs[f].ptr = d % e;
+            break;
+
         default:
             printf("[MATH] ERROR - INVALID OPERATION SPECIFIED\N");
             break;
@@ -49,4 +57,8 @@ void vm_math_mult(VMRam *ram, int a, int b, int c) {
 
 void vm_math_div(VMRam *ram, int a, int b, int c) {
     vm_math_generic(ram, a, b, c, '/');
+}
+
+void vm_math_mod(VMRam *ram, int a, int b, int c) {
+    vm_math_generic(ram, a, b, c, '%');
 }
