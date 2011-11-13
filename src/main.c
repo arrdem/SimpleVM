@@ -28,24 +28,15 @@
 #include "vmemory.c"
 
 int main(int argc, char **argv) {
-    VMBlock* k;
     VMRam *ram;
-    int j = 0, *m;
+    int j = 0;
 
     ram = vm_ram_init();
-    printf("%i\n", ram->size);
 
     vm_ram_rst(ram);
 
     while(j < 10) {
-        printf("%i\n", j);
-        k = vm_ram_malloc(ram);
-        m = malloc(sizeof(int));
-        k->ptr = m;
-        *(m) = j;
-        k->type = VMInteger;
-        k->addr = j;
-        k->used = 1;
+        vm_ram_assign(ram, j, j);
         j++;
     }
 
@@ -55,7 +46,7 @@ int main(int argc, char **argv) {
     vm_ram_compact(ram);
     vm_ram_display(ram);
     printf("\nGROWING....\n");
-    vm_ram_grow(&ram);
+    vm_ram_grow(ram);
     vm_ram_display(ram);
     printf("\nLIKE A BAUS.\n");
     return 0;

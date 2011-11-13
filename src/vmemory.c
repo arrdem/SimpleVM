@@ -21,20 +21,6 @@ void vm_ram_display(VMRam* ram) {
     }
 }
 
-void vm_ram_grow(VMRam *ram) {
-    VMBlock * newREGS;
-    ram->size *= 2;
-    newREGS = (VMBlock*) malloc(ram->size * sizeof(VMBlock));
-
-    int i = 0;
-    while(i < ram->used-1) {
-        newREGS[i] = ram->regs[i];
-        i++;
-    }
-    free(ram->regs);
-    ram->regs = newREGS;
-}
-
 void vm_ram_free(VMRam* ram, int i, int j) {
     if((j)&&(ram->regs[i].ptr != NULL)) {
         free(ram->regs[i].ptr);
@@ -44,10 +30,28 @@ void vm_ram_free(VMRam* ram, int i, int j) {
     ram->regs[i].ptr = &VMNull;
 }
 
+void vm_ram_grow(VMRam *ram) {
+    VMBlock * newREGS;
+    ram->size = 2 * ram->size;
+    newREGS = malloc(ram->size * sizeof(VMBlock));
+
+    int i = 0;
+    while(i < ram->used-1) {
+        newREGS[i] = ram->regs[i];
+        newREGS[i].ptr = malloc(sizeof(int));
+        *newREGS[i].ptr = *ram->regs[i].ptr;
+        vm_ram_free(ram, i, 1);
+        i++;
+    }
+    free(ram->regs);
+    ram->regs = newREGS;
+}
+
 VMBlock* vm_ram_malloc(VMRam* ram) {
     if(ram->used >= ram->size) {
         vm_ram_grow(ram);
     }
+    ram->regs[ram->used].used = 1;
     return &ram->regs[ram->used++];
 }
 
@@ -99,23 +103,23 @@ void vm_ram_rst(VMRam *ram) {
     printf("[RST] MALLOC(%-10i)                            [OKAY]\n",(ram->size));
 
     int i = ram->size;
-    printf("%i\n", i);
-    goto die;
     while(i >= 0) {
-        printf("%i\n", i);
         ram->regs[i].addr = i;
         ram->regs[i].ptr  = &VMNull;
         ram->regs[i].type = VMNull;
         ram->regs[i].used = VMFalse;
         i--;
     }
-    die:
-    printf("DIED\n");
 }
 
 void vm_ram_assign(VMRam *ram, int index, int value) {
     if(index < ram->used) {
-        *ram->regs[index].ptr = value;
+        ram->regs[index].ptr = value;
+    } else {
+        printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
+        VMBlock * a = vm_ram_malloc(ram);
+        a->ptr = malloc(sizeof(int));
+        *a->ptr = value;
     }
 }
 
@@ -123,7 +127,7 @@ VMRam * vm_ram_init() {
     VMRam * ram;
     ram = malloc(sizeof(VMRam));
     ram->regs = malloc(sizeof(VMBlock));
-    ram->size = 5;
+    ram->size = MIN_MEM;
     return ram;
 }
 
