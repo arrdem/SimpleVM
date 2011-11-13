@@ -1,4 +1,7 @@
-#include "vmemory.c"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "vmblock.c"
 
 void vm_add(VMBlock *a, VMBlock  *b, VMBlock  *c) {
     *c->ptr = (*a->ptr + *b->ptr);

@@ -368,11 +368,12 @@
                 Okay.. having bitten the bullet and written a spec for
                 the raw memory system, here is how I'm going to hack
                 arrays into existence. Basically I am going to use
-                three extra blocks of memory but it should be worth the
+                four extra blocks of memory but it should be worth the
                 pain.
             </p>
             <table border="1">
                 <tr align=center>
+                    <td>-2</td>
                     <td>-1</td>
                     <td>0</td>
                     <td>1</td>
@@ -383,6 +384,7 @@
                 </tr>
                 <tr align=center>
                     <td>ARRAY_START (unique)</td>
+                    <td>INT [array length]</td>
                     <td>[data]</td>
                     <td>[data]</td>
                     <td>[data]</td>
@@ -391,6 +393,21 @@
                     <td>*prt => [-1]</td>
                 </tr>
             </table>
+        </div>
+        <div style="width:100%;float:right;">
+            <h1>Pointers</h1>
+            <p>
+                I alluded to pointers in the spec for an array, but I
+                (characteristically) failed to give a concrete
+                definition. Well here it is.
+            </p>
+            <p>
+                Because the raw memory is integer-indexed, the simplest
+                thing to do is to make pointers simply specially flagged
+                cases of the general integer object. This keeps the
+                implementation of incrementing, decrementing and
+                equality fairly easy. The hard part is figuring out the
+            </p>
         </div>
     </div>
 </html>
