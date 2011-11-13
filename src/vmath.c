@@ -29,11 +29,19 @@ void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
             break;
 
         case '/':
-            *ram->regs[f].ptr = d / e;
+            if(e != 0) {
+                *ram->regs[f].ptr = d / e;
+            } else {
+                printf("[MATH] ERROR - DIV/0 DETECTED. IGNORING CALCULATION.\n");
+            }
             break;
 
         case '%':
-            *ram->regs[f].ptr = d % e;
+            if(e != 0) {
+                *ram->regs[f].ptr = d % e;
+            } else {
+                printf("[MATH] ERROR - DIV/0 DETECTED. IGNORING CALCULATION.\n");
+            }
             break;
 
         default:
@@ -60,5 +68,5 @@ void vm_math_div(VMRam *ram, int a, int b, int c) {
 }
 
 void vm_math_mod(VMRam *ram, int a, int b, int c) {
-    vm_math_generic(ram, a, b, c, '%');
+    vm_math_generic(ram, a, b, c, '%1');
 }
