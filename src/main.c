@@ -48,6 +48,13 @@ int main(int argc, char **argv) {
     printf("\nGROWING....\n");
     vm_ram_grow(ram);
     vm_ram_display(ram);
+    printf("\nDO SOME MATH...\n");
+    j = 0;
+    while(j < 10) {
+        vm_math_mult(ram, j, j+1, j+10);
+        j++;
+    }
+    vm_ram_display(ram);
     printf("\nLIKE A BAUS.\n");
     return 0;
 }

@@ -47,11 +47,12 @@ void vm_ram_grow(VMRam *ram) {
     ram->regs = newREGS;
 }
 
-VMBlock* vm_ram_malloc(VMRam* ram) {
-    if(ram->used >= ram->size) {
+VMBlock * vm_ram_malloc(VMRam* ram) {
+    if(ram->used > ram->size - MEM_PAD) {
         vm_ram_grow(ram);
     }
     ram->regs[ram->used].used = 1;
+    ram->regs[ram->used].addr = ram->used;
     return &ram->regs[ram->used++];
 }
 
