@@ -74,6 +74,23 @@ void vm_ram_grow() {
     REGS = newREGS;
 }
 
+void vm_ram_free(int i, int j) {
+    if((j)&&(REGS[i].ptr != NULL)) {
+        free(REGS[i].ptr);
+    }
+    REGS[i].used = VMFalse;
+    REGS[i].type = VMNull;
+    REGS[i].ptr = &VMNull;
+}
+
+VMBlock* vm_ram_malloc() {
+    if(FIRST_UNUSED_CELL >= MEM_SIZE) {
+        vm_ram_grow();
+    }
+    return &REGS[FIRST_UNUSED_CELL++];
+}
+
+
 void vm_ram_compact() {
     int i = 0, j = 0;
 
@@ -94,29 +111,16 @@ void vm_ram_compact() {
 
     // now copy the data left...
     while(j < MEM_SIZE) {
-        if(REGS[j].used) {
-            REGS[i] = REGS[j];
-            vm_ram_free(j);
+        if(REGS[j].used == 1) {
+            REGS[i].ptr = REGS[j].ptr;
+            REGS[i].used = 1;
+            REGS[i].addr = i;
+            REGS[i].type = REGS[j].type;
+            vm_ram_free(j, 0);
             i++;
         }
         j++;
     }
-}
-
-VMBlock* vm_ram_malloc(const int* a, int length) {
-    if(FIRST_UNUSED_CELL + length >= MEM_SIZE) {
-        vm_ram_grow();
-    }
-    return &REGS[FIRST_UNUSED_CELL += length];
-}
-
-void vm_ram_free(int i) {
-    if(REGS[i].ptr != NULL) {
-        free(REGS[i].ptr);
-    }
-    REGS[i].used = VMFalse;
-    REGS[i].type = VMNull;
-    REGS[i].ptr = &VMNull;
 }
 
 void vm_ram_rst() {
@@ -141,7 +145,7 @@ int main(int argc, char **argv) {
     vm_ram_rst();
 
     while(j < 10) {
-        k = vm_ram_malloc(VMInteger, 1);
+        k = vm_ram_malloc();
         m = malloc(sizeof(int));
         k->ptr = m;
         *(m) = j;
@@ -151,8 +155,9 @@ int main(int argc, char **argv) {
         j++;
     }
 
-    vm_ram_free(3);
+    vm_ram_free(3, 1);
     vm_ram_display();
+    printf("\n\n");
     vm_ram_compact();
     vm_ram_display();
     return 0;
