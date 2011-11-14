@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "vconsts.c"
-#include "vmblock.c"
+#include "vmtypes.c"
 
 void vm_ram_display(VMRam* ram) {
     int i = 0;

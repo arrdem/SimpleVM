@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vmblock.c"
+#include "vmtypes.c"
 
 VMBlock * vm_ram_malloc(VMRam*);
 
@@ -45,7 +45,7 @@ void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
             break;
 
         default:
-            printf("[MATH] ERROR - INVALID OPERATION SPECIFIED\N");
+            printf("[MATH] ERROR - INVALID OPERATION SPECIFIED\n");
             break;
     }
 
@@ -68,5 +68,5 @@ void vm_math_div(VMRam *ram, int a, int b, int c) {
 }
 
 void vm_math_mod(VMRam *ram, int a, int b, int c) {
-    vm_math_generic(ram, a, b, c, '%1');
+    vm_math_generic(ram, a, b, c, '%');
 }
