@@ -1,16 +1,18 @@
-/* this code from the o'riely book on FLEX and BISON */
 %{
-#include "vmparse.tab.h"
-int yyval;
+# include "vmparse.tab.h"
 %}
 
 %%
-"+"     { return ADD; }
-"-"     { return SUB; }
-"*"     { return MUL; }
-"/"     { return DIV; }
-[0-9]+  { yyval = atoi(yytext); printf("INT %i; ", yyval); return NUMBER; }
+"+" { return ADD; }
+"-" { return SUB; }
+"*" { return MUL; }
+"/" { return DIV; }
+"|"     { return ABS; }
+"("     { return OP; }
+")"     { return CP; }
+[0-9]+  { yylval = atoi(yytext); return NUMBER; }
+
 \n      { return EOL; }
-[ \t]   {}
-.       { printf("Mystery character : %c\n", *yytext); }
-%%
+"//".*
+[ \t]   { /* ignore white space */ }
+.   { yyerror("Mystery character %c\n", *yytext); }
