@@ -24,8 +24,9 @@
 
 #include "vmath.c"
 #include "vconsts.c"
-#include "vmblock.c"
+#include "vmtypes.c"
 #include "vmemory.c"
+#include "vio.c"
 
 int main(int argc, char **argv) {
     VMRam *ram;
