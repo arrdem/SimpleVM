@@ -32,6 +32,7 @@ void vm_ram_free(VMRam* ram, int i, int j) {
 
 void vm_ram_grow(VMRam *ram) {
     VMBlock * newREGS;
+    ram->segcount += ram->size;
     ram->size = 2 * ram->size;
     newREGS = malloc(ram->size * sizeof(VMBlock));
 
@@ -47,15 +48,21 @@ void vm_ram_grow(VMRam *ram) {
     ram->regs = newREGS;
 }
 
-VMBlock * vm_ram_malloc(VMRam* ram) {
+VMBlock * vm_ram_malloc(VMRam* ram, int size) {
     if(ram->used > ram->size - MEM_PAD) {
         vm_ram_grow(ram);
     }
+
+
+
     ram->regs[ram->used].used = 1;
     ram->regs[ram->used].addr = ram->used;
     return &ram->regs[ram->used++];
 }
 
+VMBlock * vm_ram_malloc(VMRam* ram) {
+    return vm_ram_malloc(ram, 1);
+}
 
 void vm_ram_compact(VMRam* ram) {
     int i = 0, j = 0;
@@ -129,6 +136,14 @@ VMRam * vm_ram_init() {
     ram = malloc(sizeof(VMRam));
     ram->regs = malloc(sizeof(VMBlock));
     ram->size = MIN_MEM;
+
+    // new code for RAM segmentation...
+    ram->segments  = malloc(MIN_SEGS * sizeof(VMSegment));
+    ram->seg_count = 1;
+    ram->seg_size  = MIN_SEGS;
+
+    ram->segments[0].b = ram->regs;
+    ram->segments[0].length = ram->size;
     return ram;
 }
 

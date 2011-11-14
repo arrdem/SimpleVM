@@ -28,6 +28,7 @@
 #include "vmemory.c"
 #include "vio.c"
 
+
 int main(int argc, char **argv) {
     VMRam *ram;
     int j = 0;
@@ -57,5 +58,26 @@ int main(int argc, char **argv) {
     }
     vm_ram_display(ram);
     printf("\nLIKE A BAUS.\n");
+
+    while(1) {
+        split* s = vm_io_getline(">>> \0", 80);
+        if(strcmp(s->strings[0], "LET")) {
+            // const. assignment code
+        } else if(strcmp(s->strings[0], "ADD")) {
+            // add
+        } else if(strcmp(s->strings[0], "SUB")) {
+            // subtract
+        } else if(strcmp(s->strings[0], "DIV")) {
+            // divide
+        } else if(strcmp(s->strings[0], "MUL")) {
+            // multiply
+        } else if(strcmp(s->strings[0], "MOD")) {
+            // modulus
+        } else if(strcmp(s->strings[0], "DEL")) {
+            // delete
+        } else if(strcmp(s->strings[0], "MOD")) {
+        } else if(strcmp(s->strings[0], "MOD")) {
+        } else if(strcmp(s->strings[0], "MOD")) {
+
     return 0;
 }
