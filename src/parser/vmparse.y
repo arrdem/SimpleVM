@@ -1,3 +1,4 @@
+/* this code from the o'riely book on FLEX and BISON */
 %{
 #include <stdio.h>
 #include <stdlib.h>

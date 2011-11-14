@@ -1,3 +1,4 @@
+/* this code from the o'riely book on FLEX and BISON */
 %{
     enum yytokentype {
         MOD = 257,
