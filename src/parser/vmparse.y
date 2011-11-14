@@ -1,28 +1,38 @@
 /* this code from the o'riely book on FLEX and BISON */
 %{
 #include <stdio.h>
-#include <stdlib.h>
 %}
 
-%token address
-%token number
-%token ADD
-%token eol
+%token NUMBER
+%token ADD SUB MUL DIV
+%token EOL
 
 %%
 
-statement:
-    | add address address address eol
-    | sub address address address eol
-    | mul address address address eol
-    | div address address address eol
-    | abs address address address eol
-    | mod address address address eol
-    | set address number eol
+calclist:
+    | calclist exp EOL { printf("= %i\n", $1); }
     ;
 
+exp: factor { $$ = $1;}
+    | exp ADD factor { printf("ADDING %i, %i\n", $1, $3); $$ = $1 + $3; }
+    | exp SUB factor { $$ = $1 - $3; }
+    ;
+
+factor: term { $$ = $1;}
+    | factor MUL term { $$ = $1 * $3; }
+    | factor DIV term { $$ = $1 / $3; }
+    ;
+
+term: NUMBER { $$ = $1;}
+    ;
 %%
 
-maint(int argc, char** argv) {
-    yylex();
+main(int argc, char** argv)
+{
+    yyparse();
+}
+
+yyerror(char* s)
+{
+    fprintf(stderr, "error %s\n", s);
 }
