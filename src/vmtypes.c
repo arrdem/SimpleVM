@@ -14,8 +14,9 @@ typedef struct {
 } VMSegment;
 
 typedef struct {
-    VMSegment* segments
-    int segcount;
+    VMSegment* segments;
+    int seg_count;
+    int seg_size;
     VMBlock* regs;
     int size;
 } VMRam;

@@ -7,6 +7,8 @@
 #include "vconsts.c"
 #include "vmtypes.c"
 
+VMRam* vm_ram_init();
+
 void vm_ram_display(VMRam* ram) {
     int i = 0;
     VMBlock b;
@@ -32,36 +34,50 @@ void vm_ram_free(VMRam* ram, int i, int j) {
 
 void vm_ram_grow(VMRam *ram) {
     VMBlock * newREGS;
-    ram->segcount += ram->size;
-    ram->size = 2 * ram->size;
-    newREGS = malloc(ram->size * sizeof(VMBlock));
+    ram->seg_count += ram->size;
+    newREGS = malloc(2 * ram->size * sizeof(VMBlock));
 
     int i = 0;
-    while(i < ram->used-1) {
-        newREGS[i] = ram->regs[i];
-        newREGS[i].ptr = malloc(sizeof(int));
-        *newREGS[i].ptr = *ram->regs[i].ptr;
-        vm_ram_free(ram, i, 1);
+    while(i < ram->size) {
+        if(ram->regs[i].used) {
+            newREGS[i] = ram->regs[i];
+            newREGS[i].ptr = malloc(sizeof(int));
+            *newREGS[i].ptr = *ram->regs[i].ptr;
+            vm_ram_free(ram, i, 1);
+        }
         i++;
+
     }
     free(ram->regs);
     ram->regs = newREGS;
+    ram->size *= 2;
 }
 
 VMBlock * vm_ram_malloc(VMRam* ram, int size) {
-    if(ram->used > ram->size - MEM_PAD) {
+    if(ram->used + size > ram->size - MEM_PAD) {
         vm_ram_grow(ram);
     }
+    int i = ram->seg_count, j = 0;
+    while(i >= 0) {
+        if(ram->segments[i].length >= size) {
+            break;
+        }
+        i--;
+    }
 
+    VMBlock *b;
+    b = ram->segments[i].b;
+    ram->segments[i].length -= size;
+    ram->segments[i].b += size;
 
+    // set used flags
+    while(j < size) {
+        *(b + j)->used = 1;
+    }
 
-    ram->regs[ram->used].used = 1;
-    ram->regs[ram->used].addr = ram->used;
-    return &ram->regs[ram->used++];
-}
+    vm_ram_seg_clean(ram);
 
-VMBlock * vm_ram_malloc(VMRam* ram) {
-    return vm_ram_malloc(ram, 1);
+    return b;
 }
 
 void vm_ram_compact(VMRam* ram) {
@@ -99,33 +115,27 @@ void vm_ram_compact(VMRam* ram) {
 }
 
 void vm_ram_rst(VMRam *ram) {
-    ram->used = 0;
-    printf("[RST] USED                                          [OKAY]\n");
-
-    if(ram->regs) {
-        free(ram->regs);
+    while(ram->seg_count-- > 0) { // possible off by 1
+        free(ram->segments[ram->seg_count].b);
     }
-    printf("[RST] FREE                                          [OKAY]\n");
+    free(ram->segments);
 
-    ram->regs = malloc(ram->size * sizeof(VMBlock));
-    printf("[RST] MALLOC(%-10i)                            [OKAY]\n",(ram->size));
-
-    int i = ram->size;
-    while(i >= 0) {
-        ram->regs[i].addr = i;
-        ram->regs[i].ptr  = &VMNull;
-        ram->regs[i].type = VMNull;
-        ram->regs[i].used = VMFalse;
-        i--;
+    while(ram->size-- > 0) { // probable segfault due to free()int null
+        if(*ram->regs[ram->size].ptr) {
+            free(ram->regs[ram->size].ptr);
+        }
     }
+    free(ram->regs);
+
+    ram = vm_ram_init();
 }
 
 void vm_ram_assign(VMRam *ram, int index, int value) {
-    if(index < ram->used) {
-        ram->regs[index].ptr = value;
+    if(ram->regs[index].used) {
+        *ram->regs[index].ptr = value;
     } else {
-        printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
         VMBlock * a = vm_ram_malloc(ram);
+        printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", a->addr);
         a->ptr = malloc(sizeof(int));
         *a->ptr = value;
     }
@@ -137,6 +147,16 @@ VMRam * vm_ram_init() {
     ram->regs = malloc(sizeof(VMBlock));
     ram->size = MIN_MEM;
 
+    // auto init all vars to null
+    int i = ram->size;
+    while(i >= 0) {
+        ram->regs[i].addr = i;
+        ram->regs[i].ptr  = &VMNull;
+        ram->regs[i].type = VMNull;
+        ram->regs[i].used = VMFalse;
+        i--;
+    }
+
     // new code for RAM segmentation...
     ram->segments  = malloc(MIN_SEGS * sizeof(VMSegment));
     ram->seg_count = 1;
@@ -146,6 +166,5 @@ VMRam * vm_ram_init() {
     ram->segments[0].length = ram->size;
     return ram;
 }
-
 
 #endif
