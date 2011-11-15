@@ -76,18 +76,28 @@ HALT     |           | Term. execution
 
 == Logic & Binary
 OpCode   | Args      | Description
+
 ---------+-----------+-------------------------------------------
+
 OR       | N1 N2 N3  | N3 := N1 || N2
+
 AND      | N1 N2 N3  | N3 := N1 && N2
+
 NOT      | N1 N3     | N3 := !N1
+
 XOR      | N1 N2 N3  | N3 :=(N1 & !N2) || (!N1 & N2)
+
 RSFT     | N1        | shifts the value at N1 right one bit, truncating for space and padding with 0
+
 LSFT     | N1        | shifts the value at N1 left one bit, truncating for space and padding with 0
 
 == Stacks
 OpCode   | Args      | Description
+
 ---------+-----------+-------------------------------------------
+
 PUSH     | N1 N2     | push N1 onto stack N2
+
 POP      | N1 N2     | pop from N1 into N2
 
 == Pointers
@@ -97,6 +107,9 @@ like arrays and pass-by-reference, but for simplicity's sake they
 will not feature typing.
 
 OpCode   | Args      | Description
+
 ---------+-----------+-------------------------------------------
+
 INCR     | N1        | shifts the pointer one address right
+
 DECR     | N1        | shifts the pointer one address left
