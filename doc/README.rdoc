@@ -41,147 +41,54 @@ to ensure that the parameters' types match and errors
 will be thrown if they are inappropriate.
 
 = Bytecode Spec
-==Integers
-<table border=1>
-    <tr>
-        <th>OpCode</th>
-        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><b>ADD</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 + N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>SUB</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 - N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>MUL</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 * N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>DIV</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 / N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>MOD</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 % N2 => N3</td>
-    </tr>
-</table>
+
+Syntax note: Below I us "N1", "N2", "N3" etc. to refer to the arguments
+of various operations. Please remember that this is a working spec and
+by no means represents a formal grammar or typeset which is guaranteed
+to be implemented in full whenever Simple VM makes 1.0
+
+All of these tables are notes to myself on functionality which I wish
+to implement and the rough syntax which I plan to use therefor.
+
+== Integers
+OpCode   | Args      | Description
+---------+-----------+--------------
+ADD      | N1 N2 N3  | N3 := N1 + N2
+SUB      | N1 N2 N3  | N3 := N1 - N2
+MUL      | N1 N2 N3  | N3 := N1 * N2
+DIV      | N1 N2 N3  | N3 := N1 / N2
+MOD      | N1 N2 N3  | N3 := N1 % N2
+
 == System
 System opcodes are for the most part type-insensitive
 or perform untyped operations.
-<table border=1>
-    <tr>
-        <th>OpCode</th>
-        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><b>DINT</b></td>
-        <td>N1</td>
-        <td>creates an int at N1</td>
-    </tr>
-    <tr>
-        <td><b>DBIT</b></td>
-        <td>N1</td>
-        <td>creates a bool N1</td>
-    </tr>
-    <tr>
-        <td><b>DPTR</b></td>
-        <td>N1 N2</td>
-        <td>creates a pointer at N1 to N2</td>
-    </tr>
-    <tr>
-        <td><b>SWAP</b></td>
-        <td>N1 N2</td>
-        <td>swaps the values at N1, N2. Type unsafe.</td>
-    </tr>
-    <tr>
-        <td><b>MCPY</b></td>
-        <td>N1 N2</td>
-        <td>raw memory copy of N1 to N2. Type unsafe.</td>
-    </tr>
-    <tr>
-        <td><b>DEL</b></td>
-        <td>N1</td>
-        <td>raw memory delete of whatever N1 points to.</td>
-    </tr>
-    <tr>
-        <td><b>GOTO</b></td>
-        <td>N1</td>
-        <td>Jumps to instruction N1</td>
-    </tr>
-    <tr>
-        <td><b>HALT</b></td>
-        <td></td>
-        <td>Term. execution</td>
-    </tr>
-</table>
+
+OpCode   | Args      | Description
+---------+-----------+-------------------------------------------
+DINT     | N1        | creates an int at N1
+DBIT     | N1        | creates a bool N1
+DPTR     | N1 N2     | creates a pointer at N1 to N2
+SWAP     | N1 N2     | swaps the values at N1, N2. Type unsafe.
+MCPY     | N1 N2     | raw memory copy of N1 to N2. Type unsafe.
+DEL      | N1        | raw memory delete of whatever N1 points to.
+GOTO     | N1        | Jumps to instruction N1
+HALT     |           | Term. execution
 
 == Logic & Binary
-<table border=1>
-    <tr>
-        <th>OpCode</th>
-        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><b>OR</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 || N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>AND</b></td>
-        <td>N1 N2 N3</td>
-        <td>N1 && N2 => N3</td>
-    </tr>
-    <tr>
-        <td><b>NOT</b></td>
-        <td>N1 N3</td>
-        <td>!N1 => N3</td>
-    </tr>
-    <tr>
-        <td><b>XOR</b></td>
-        <td>N1 N2 N3</td>
-        <td>(N1 & !N2) || (!N1 & N2) => N3</td>
-    </tr>
-    <tr>
-        <td><b>RSFT</b></td>
-        <td>N1</td>
-        <td>shifts the value at N1 right one bit, truncating for space and padding with 0</td>
-    </tr>
-    <tr>
-        <td><b>LSFT</b></td>
-        <td>N1</td>
-        <td>shifts the value at N1 left one bit, truncating for space and padding with 0</td>
-    </tr>
-</table>
+OpCode   | Args      | Description
+---------+-----------+-------------------------------------------
+OR       | N1 N2 N3  | N3 := N1 || N2
+AND      | N1 N2 N3  | N3 := N1 && N2
+NOT      | N1 N3     | N3 := !N1
+XOR      | N1 N2 N3  | N3 :=(N1 & !N2) || (!N1 & N2)
+RSFT     | N1        | shifts the value at N1 right one bit, truncating for space and padding with 0
+LSFT     | N1        | shifts the value at N1 left one bit, truncating for space and padding with 0
 
 == Stacks
-<table border=1>
-    <tr>
-        <th>OpCode</th>
-        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><b>PUSH</b></td>
-        <td>N1 N2 </td>
-        <td>push N1 onto stack N2</td>
-    </tr>
-    <tr>
-        <td><b>POP</b></td>
-        <td>N1 N2</td>
-        <td>pop from N1 into N2</td>
-    </tr>
-</table>
+OpCode   | Args      | Description
+---------+-----------+-------------------------------------------
+PUSH     | N1 N2     | push N1 onto stack N2
+POP      | N1 N2     | pop from N1 into N2
 
 == Pointers
 Within SimpleVM, pointers are untyped references to some block of
@@ -189,20 +96,7 @@ memory. They are intended to allow for the implementation of features
 like arrays and pass-by-reference, but for simplicity's sake they
 will not feature typing.
 
-<table border=1>
-    <tr>
-        <th>OpCode</th>
-        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><b>INCR</b></td>
-        <td>N1</td>
-        <td>shifts the pointer one address right</td>
-    </tr>
-    <tr>
-        <td><b>DECR</b></td>
-        <td>N1</td>
-        <td>shifts the pointer one address left</td>
-    </tr>
-</table>
+OpCode   | Args      | Description
+---------+-----------+-------------------------------------------
+INCR     | N1        | shifts the pointer one address right
+DECR     | N1        | shifts the pointer one address left
