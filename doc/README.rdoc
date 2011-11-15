@@ -1,0 +1,208 @@
+== SimpleVM Goals
+* Booleans - Basic C bool
+* Logical branching - C/Python if statement
+* Logical And - And by bits
+* Logical Or -  Or by bits
+* Logical Not - Not by bits
+* Logical XOR - XOR by bits.. gotta have it for major bitwhackin'
+* Bitshift Right
+* Bitshift Left
+* Assignment - non-typesafe memory to memory copy
+* Integers - Signed 32-bit integers
+* Pointer - Same as a C pointer
+* Arrays - Basic C-style continuous memory block of either integers or booleans
+* Stacks - Basic FIFO que of pointers
+* STDIN/STDOUT IO
+
+== Parse Structure
+As this code is supposed to simulate the runtime environment
+of a very low-level processor, there are very few "builtin"
+features and the set of keywords is minimal. Keyword
+declaration is also not possible, subroutines and functions
+are accomplished purely with raw stacks and are expected
+to be emulated by a compiler, not written by hand.
+General Structure:
+    &optcode [&opt [&opt [&opt [&opt]]]]]
+where &optcode is a string of length four chars or less
+terminated with a space and defined in the Bytecode Spec
+later in this document. Each &opt is a string of length
+n < 6 which is the name of a defined memory block.
+
+The VM itself is CASE-INSENSITVE when it comes to variable
+names and keywords, but the standard is for uppercase
+as that is what the VM coerces to during code execution.
+
+Note on optcodes - optcodes may NOT be overloaded.
+While traditionally some verbs such as "<<" and ">>" may
+be applied to multiple types of objects, for simplicity
+SimpleVM does not support type inference as such. At
+least in v1. At runtime, the VM will do type checking
+to ensure that the parameters' types match and errors
+will be thrown if they are inappropriate.
+
+= Bytecode Spec
+==Integers
+<table border=1>
+    <tr>
+        <th>OpCode</th>
+        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>ADD</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 + N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>SUB</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 - N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>MUL</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 * N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>DIV</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 / N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>MOD</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 % N2 => N3</td>
+    </tr>
+</table>
+== System
+System opcodes are for the most part type-insensitive
+or perform untyped operations.
+<table border=1>
+    <tr>
+        <th>OpCode</th>
+        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>DINT</b></td>
+        <td>N1</td>
+        <td>creates an int at N1</td>
+    </tr>
+    <tr>
+        <td><b>DBIT</b></td>
+        <td>N1</td>
+        <td>creates a bool N1</td>
+    </tr>
+    <tr>
+        <td><b>DPTR</b></td>
+        <td>N1 N2</td>
+        <td>creates a pointer at N1 to N2</td>
+    </tr>
+    <tr>
+        <td><b>SWAP</b></td>
+        <td>N1 N2</td>
+        <td>swaps the values at N1, N2. Type unsafe.</td>
+    </tr>
+    <tr>
+        <td><b>MCPY</b></td>
+        <td>N1 N2</td>
+        <td>raw memory copy of N1 to N2. Type unsafe.</td>
+    </tr>
+    <tr>
+        <td><b>DEL</b></td>
+        <td>N1</td>
+        <td>raw memory delete of whatever N1 points to.</td>
+    </tr>
+    <tr>
+        <td><b>GOTO</b></td>
+        <td>N1</td>
+        <td>Jumps to instruction N1</td>
+    </tr>
+    <tr>
+        <td><b>HALT</b></td>
+        <td></td>
+        <td>Term. execution</td>
+    </tr>
+</table>
+
+== Logic & Binary
+<table border=1>
+    <tr>
+        <th>OpCode</th>
+        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>OR</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 || N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>AND</b></td>
+        <td>N1 N2 N3</td>
+        <td>N1 && N2 => N3</td>
+    </tr>
+    <tr>
+        <td><b>NOT</b></td>
+        <td>N1 N3</td>
+        <td>!N1 => N3</td>
+    </tr>
+    <tr>
+        <td><b>XOR</b></td>
+        <td>N1 N2 N3</td>
+        <td>(N1 & !N2) || (!N1 & N2) => N3</td>
+    </tr>
+    <tr>
+        <td><b>RSFT</b></td>
+        <td>N1</td>
+        <td>shifts the value at N1 right one bit, truncating for space and padding with 0</td>
+    </tr>
+    <tr>
+        <td><b>LSFT</b></td>
+        <td>N1</td>
+        <td>shifts the value at N1 left one bit, truncating for space and padding with 0</td>
+    </tr>
+</table>
+
+== Stacks
+<table border=1>
+    <tr>
+        <th>OpCode</th>
+        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>PUSH</b></td>
+        <td>N1 N2 </td>
+        <td>push N1 onto stack N2</td>
+    </tr>
+    <tr>
+        <td><b>POP</b></td>
+        <td>N1 N2</td>
+        <td>pop from N1 into N2</td>
+    </tr>
+</table>
+
+== Pointers
+Within SimpleVM, pointers are untyped references to some block of
+memory. They are intended to allow for the implementation of features
+like arrays and pass-by-reference, but for simplicity's sake they
+will not feature typing.
+
+<table border=1>
+    <tr>
+        <th>OpCode</th>
+        <th>Args&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><b>INCR</b></td>
+        <td>N1</td>
+        <td>shifts the pointer one address right</td>
+    </tr>
+    <tr>
+        <td><b>DECR</b></td>
+        <td>N1</td>
+        <td>shifts the pointer one address left</td>
+    </tr>
+</table>
