@@ -1,0 +1,51 @@
+=begin
+= Simple VM
+Simple VM is just what it claims to be, a simple c virtual machine
+designed to emulate an infinite memory register machine.
+When finished, Simple VM will provide builtins such as pointers,
+arrays, integer arithmetic, boolean logic and conditional branching.
+
+== Background
+As one of my "CS 101" equivalent projects at UT Austin, I had the
+pleasure of implimenting a simple interpreter for a scripting language
+designed to specify the behavior of virtual insects. This language
+doubed "Critter Code" proved very difficult to write and debug by hand
+so I developed a compiler named "KritterKompiler" (yay creativity)
+which would take C-like code and translate it into raw critter opcodes.
+
+When the dust cleared and my critter lost by a slim margin in the
+contest it hit me that I had a working C to ASM translator and no bild
+target. Hence Simple VM.
+
+== Feature Set
+While the Critter environment was incredibly restrictive, giving me only
+"GOTO" statements, integer increment/decrement operations and taunting
+me with ten integer memory blocks the Simple VM environment is designed
+with no such failings in mind.
+* Dynamic registers - the VM's ability to store data grows as you use more
+* Raw STDIN/STDOUT IO - when done SimpleVM will provide printing and
+  reading of c-style char(integer ord) arrays.
+
+== Current State
+As SimpleVM is a pet project, any time I devote to it is too much. That
+infuriating fact aside, Simple VM is still very much in development.
+As of now, the following features work
+* RAM printing
+* RAM growing
+* RAM garbage collecting
+* Integer Addition, Subtraction, Mult and Div between RAM addresses
+
+The following features are still to be finnished
+* STDIN interpreter for typed code
+* General parser for input code whatever source
+* Improved memory management
+* Improved addressing system
+* Named (string name) variables independant of addresses
+
+== Disclaimer and Closing Comments
+This c was hacked together in under seventy-two hours by a college freshman
+who hadn't touched C before in his life. If you use this code for
+anything serious, you are nuts to put it kindly.
+
+That said, all this code is GPL'd. Special arrangements could be made
+if someone has need of a different lisence but I can't imagine why.
