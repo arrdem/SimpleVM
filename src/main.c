@@ -28,6 +28,7 @@
 #include "vmemory.c"
 #include "vio.c"
 
+
 int main(int argc, char **argv) {
     VMRam *ram;
     int j = 0;
@@ -57,5 +58,38 @@ int main(int argc, char **argv) {
     }
     vm_ram_display(ram);
     printf("\nLIKE A BAUS.\n");
+
+    while(1) {
+        char* s = vm_io_read(">>> \0", 80);
+        char * pch;
+        if(!*s) {
+            return 0;
+        }
+        pch = strtok(s, " \n\t");
+
+        if(strcmp(pch, "LET") == 0) {
+
+            printf("ASSIGNING....\n");
+        } else if(strcmp(pch, "ADD") == 0) {
+            // add
+            printf("ADDING....\n");
+        } else if(strcmp(pch, "SUB") == 0) {
+            // subtract
+            printf("SUBTRACTING....\n");
+        } else if(strcmp(pch, "DIV") == 0) {
+            // divide
+            printf("DIVIDING....\n");
+        } else if(strcmp(pch, "MUL") == 0) {
+            // multiply
+        } else if(strcmp(pch, "MOD") == 0) {
+            // modulus
+        } else if(strcmp(pch, "DEL") == 0) {
+            // delete
+        } else if(strcmp(pch, "HLT") == 0) {
+            break;
+        } else {
+            printf("UNRECOGNIZED: \"%s\"\n",pch);
+        }
+    }
     return 0;
 }
