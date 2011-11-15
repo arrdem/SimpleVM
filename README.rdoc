@@ -1,5 +1,4 @@
-=begin
-= Simple VM
+=Simple VM
 Simple VM is just what it claims to be, a simple c virtual machine
 designed to emulate an infinite memory register machine.
 When finished, Simple VM will provide builtins such as pointers,
@@ -41,6 +40,16 @@ The following features are still to be finnished
 * Improved memory management
 * Improved addressing system
 * Named (string name) variables independant of addresses
+
+== File Structure
+While it may seem that I have a lot written down here about the how
+and why of my creation, believe me when I say that my notes on register
+machine design and old microprocessor verb sets are more extensive.
+This file is simply an introduction suitable for someone browsing GH
+at random. For greater technical detail and most importantly an
+instruction set specification check out the "doc" folder. If I have
+devised an answer, work around or hack it is documented somewhere
+therein.
 
 == Disclaimer and Closing Comments
 This c was hacked together in under seventy-two hours by a college freshman
