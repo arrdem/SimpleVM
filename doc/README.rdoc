@@ -1,18 +1,18 @@
 == SimpleVM Goals
-* Booleans - Basic C bool
-* Logical branching - C/Python if statement
-* Logical And - And by bits
-* Logical Or -  Or by bits
-* Logical Not - Not by bits
-* Logical XOR - XOR by bits.. gotta have it for major bitwhackin'
-* Bitshift Right
-* Bitshift Left
-* Assignment - non-typesafe memory to memory copy
-* Integers - Signed 32-bit integers
-* Pointer - Same as a C pointer
-* Arrays - Basic C-style continuous memory block of either integers or booleans
-* Stacks - Basic FIFO que of pointers
-* STDIN/STDOUT IO
+    * Booleans - Basic C bool
+    * Logical branching - C/Python if statement
+    * Logical And - And by bits
+    * Logical Or -  Or by bits
+    * Logical Not - Not by bits
+    * Logical XOR - XOR by bits.. gotta have it for major bitwhackin'
+    * Bitshift Right
+    * Bitshift Left
+    * Assignment - non-typesafe memory to memory copy
+    * Integers - Signed 32-bit integers
+    * Pointer - Same as a C pointer
+    * Arrays - Basic C-style continuous memory block of either integers or booleans
+    * Stacks - Basic FIFO que of pointers
+    * STDIN/STDOUT IO
 
 == Parse Structure
 As this code is supposed to simulate the runtime environment
