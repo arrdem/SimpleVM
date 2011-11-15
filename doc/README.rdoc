@@ -51,54 +51,44 @@ All of these tables are notes to myself on functionality which I wish
 to implement and the rough syntax which I plan to use therefor.
 
 == Integers
-OpCode   | Args      | Description
----------+-----------+--------------
-ADD      | N1 N2 N3  | N3 := N1 + N2
-SUB      | N1 N2 N3  | N3 := N1 - N2
-MUL      | N1 N2 N3  | N3 := N1 * N2
-DIV      | N1 N2 N3  | N3 := N1 / N2
-MOD      | N1 N2 N3  | N3 := N1 % N2
+    OpCode   | Args      | Description
+    ---------+-----------+--------------
+    ADD      | N1 N2 N3  | N3 := N1 + N2
+    SUB      | N1 N2 N3  | N3 := N1 - N2
+    MUL      | N1 N2 N3  | N3 := N1 * N2
+    DIV      | N1 N2 N3  | N3 := N1 / N2
+    MOD      | N1 N2 N3  | N3 := N1 % N2
 
 == System
 System opcodes are for the most part type-insensitive
 or perform untyped operations.
 
-OpCode   | Args      | Description
----------+-----------+-------------------------------------------
-DINT     | N1        | creates an int at N1
-DBIT     | N1        | creates a bool N1
-DPTR     | N1 N2     | creates a pointer at N1 to N2
-SWAP     | N1 N2     | swaps the values at N1, N2. Type unsafe.
-MCPY     | N1 N2     | raw memory copy of N1 to N2. Type unsafe.
-DEL      | N1        | raw memory delete of whatever N1 points to.
-GOTO     | N1        | Jumps to instruction N1
-HALT     |           | Term. execution
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    DINT     | N1        | creates an int at N1
+    DBIT     | N1        | creates a bool N1
+    DPTR     | N1 N2     | creates a pointer at N1 to N2
+    SWAP     | N1 N2     | swaps the values at N1, N2. Type unsafe.
+    MCPY     | N1 N2     | raw memory copy of N1 to N2. Type unsafe.
+    DEL      | N1        | raw memory delete of whatever N1 points to.
+    GOTO     | N1        | Jumps to instruction N1
+    HALT     |           | Term. execution
 
 == Logic & Binary
-OpCode   | Args      | Description
-
----------+-----------+-------------------------------------------
-
-OR       | N1 N2 N3  | N3 := N1 || N2
-
-AND      | N1 N2 N3  | N3 := N1 && N2
-
-NOT      | N1 N3     | N3 := !N1
-
-XOR      | N1 N2 N3  | N3 :=(N1 & !N2) || (!N1 & N2)
-
-RSFT     | N1        | shifts the value at N1 right one bit, truncating for space and padding with 0
-
-LSFT     | N1        | shifts the value at N1 left one bit, truncating for space and padding with 0
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    OR       | N1 N2 N3  | N3 := N1 || N2
+    AND      | N1 N2 N3  | N3 := N1 && N2
+    NOT      | N1 N3     | N3 := !N1
+    XOR      | N1 N2 N3  | N3 :=(N1 & !N2) || (!N1 & N2)
+    RSFT     | N1        | shifts the value at N1 right one bit, truncating for space and padding with 0
+    LSFT     | N1        | shifts the value at N1 left one bit, truncating for space and padding with 0
 
 == Stacks
-OpCode   | Args      | Description
-
----------+-----------+-------------------------------------------
-
-PUSH     | N1 N2     | push N1 onto stack N2
-
-POP      | N1 N2     | pop from N1 into N2
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    PUSH     | N1 N2     | push N1 onto stack N2
+    POP      | N1 N2     | pop from N1 into N2
 
 == Pointers
 Within SimpleVM, pointers are untyped references to some block of
@@ -106,10 +96,7 @@ memory. They are intended to allow for the implementation of features
 like arrays and pass-by-reference, but for simplicity's sake they
 will not feature typing.
 
-OpCode   | Args      | Description
-
----------+-----------+-------------------------------------------
-
-INCR     | N1        | shifts the pointer one address right
-
-DECR     | N1        | shifts the pointer one address left
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    INCR     | N1        | shifts the pointer one address right
+    DECR     | N1        | shifts the pointer one address left
