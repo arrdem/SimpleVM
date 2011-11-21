@@ -1,120 +1,57 @@
-    <h1>Memory Model</h1><hr>
-    <h2>Overview</h2>
-    <div style="width:95%;float:right;">
-        <p>
-            Just a quick executive summary of the memory system
-            covering the basic void pointer container and the
-            integer indexing scheme which makes everything
-            really easy.
-        </p>
-    </div>
-    <h2>Details</h2>
-    <div style="width:95%;float:right;">
-        <p>
-            Thge biggest sticking point for me in writing an implimentation
-            of this spec was a lack of a clear memory model for the final
-            virtual machine. This makes the mechanics of the pointers
-            and other memory-dependant features undefined and impossible
-            to implement.
-        </p>
-        <p>
-            Inefficient as it may be, this VM in the 1.0 version at
-            any rate will be based on a single linear array of type
-            VMData. The VMData struct (raw c) has a void pointer to some
-            block of memory defined at initialization time, an integer
-            flag which states internal type (int/float/bool/ptr.).
-            Scope does not exist as far as the actual VM is
-            concerned, all variables are globals. This makes memory
-            management for the VM a real breeze, but makes memory
-            leaks a very serious potential problem.
-        </p>
-        <h3>Allocate Memory</h3>
-        <p>
-            The allocation operation is really easy.. figure out
-            how many blocks of memory will be required to store the
-            new data/litteral, increment the counter to the last
-            un-used memory cell and perform the requisite
-            assignment opperations on the memory to hand.
-        </p>
-        <p>
-            With some probability, it will me necessary to allocate
-            a new, bigger array and copy over the old elements. This
-            case must be accounted for.
-        </p>
-        <h3>Deallocate Memory</h3>
-        <p>
-            Deallocation is slightly harder and certainly more
-            expensive as an operation, but is also comparatively
-            trivial. The deallocation operation is performed on an
-            index of the VM's memory. That index is "deleted" by
-            overwriting by shifting all the other memory to the
-            right of the target index left by the number of deleted
-            indices.
-        </p>
-        <p>
-            <b>WARNING -</b> the memory to which the deleted node's
-            void pointer refers <u>l>must</u> be dealloc'd,
-            otherwise the VM will leak memory with each delete op.
-        </p>
-        <p>
-            <b>SPECIAL CASE -</b> Somehow arrays have to be
-            accounted for. While I have yet to author a similarly
-            vague yet implementable spec for arrays, my mental
-            sketch therefore suggests that a dealloc operation on an
-            array will receive only a pointer to the "head" of the
-            array. The ENTIRE array must be iteratively deleted as
-            a series of nodes, so it would make sense to delay the
-            left shift as long as possible lest you perform o(n)
-            shifts on m data points.... not cheap. By delaying the
-            compacting operation we can make deletion O(N+M) not
-            O(N*M)
-        </p>
-    </div>
-</div>
-<div style="width:100%;float:right;">
-    <h1>Arrays</h1>
-    <p>
-        Okay.. having bitten the bullet and written a spec for
-        the raw memory system, here is how I'm going to hack
-        arrays into existence. Basically I am going to use
-        four extra blocks of memory but it should be worth the
-        pain.
-    </p>
-    <table border="1">
-        <tr align=center>
-            <td>-2</td>
-            <td>-1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>...</td>
-            <td>n</td>
-            <td>n+1</td>
-            <td>n+2</td>
-        </tr>
-        <tr align=center>
-            <td>ARRAY_START (unique)</td>
-            <td>INT [array length]</td>
-            <td>[data]</td>
-            <td>[data]</td>
-            <td>[data]</td>
-            <td>[data]</td>
-            <td>ARRAY_END (unique)</td>
-            <td>*prt => [-1]</td>
-        </tr>
-    </table>
-</div>
-<div style="width:100%;float:right;">
-    <h1>Pointers</h1>
-    <p>
-        I alluded to pointers in the spec for an array, but I
-        (characteristically) failed to give a concrete
-        definition. Well here it is.
-    </p>
-    <p>
-        Because the raw memory is integer-indexed, the simplest
-        thing to do is to make pointers simply specially flagged
-        cases of the general integer object. This keeps the
-        implementation of incrementing, decrementing and
-        equality fairly easy. The hard part is figuring out the
-    </p>
-</div>
+= Memory Model
+== Overview
+Just a quick executive summary of the memory system covering the basic
+void pointer container and the integer indexing scheme which makes
+everything really easy.
+
+== Details
+The biggest sticking point for me in writing an implementation of this
+spec was a lack of a clear memory model for the final virtual machine.
+This makes the mechanics of the pointers and other memory-dependent
+features undefined and impossible to implement.
+
+Inefficient as it may be, this VM in the 1.0 version at
+any rate will be based on a single linear array of type
+VMData. The VMData struct (raw c) has a void pointer to some
+block of memory defined at initialization time, an integer
+flag which states internal type (int/float/bool/ptr.).
+Scope does not exist as far as the actual VM is
+concerned, all variables are globals. This makes memory
+management for the VM a real breeze, but makes memory
+leaks a very serious potential problem.
+
+== Allocate Memory
+The allocation operation is really easy.. figure out
+how many blocks of memory will be required to store the
+new data/literal, increment the counter to the last
+un-used memory cell and perform the requisite
+assignment operations on the memory to hand.
+
+With some probability, it will me necessary to allocate
+a new, bigger array and copy over the old elements. This
+case must be accounted for.
+
+== Deallocate Memory
+Deallocation is slightly harder and certainly more
+expensive as an operation, but is also comparatively
+trivial. The deallocation operation is performed on an
+index of the VM's memory. That index is "deleted" by
+overwriting by shifting all the other memory to the
+right of the target index left by the number of deleted
+indices.
+
+((*WARNING*)) - the memory to which the deleted node's
+void pointer refers must be dealloc'd,
+otherwise the VM will leak memory with each delete op.
+
+((*SPECIAL CASE*)) - Somehow arrays have to be
+accounted for. While I have yet to author a similarly
+vague yet implementable spec for arrays, my mental
+sketch therefore suggests that a dealloc operation on an
+array will receive only a pointer to the "head" of the
+array. The ENTIRE array must be iteratively deleted as
+a series of nodes, so it would make sense to delay the
+left shift as long as possible lest you perform o(n)
+shifts on m data points.... not cheap. By delaying the
+compacting operation we can make deletion O(N+M) not
+O(N*M)
