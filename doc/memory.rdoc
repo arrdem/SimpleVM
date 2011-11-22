@@ -40,11 +40,11 @@ overwriting by shifting all the other memory to the
 right of the target index left by the number of deleted
 indices.
 
-((*WARNING*)) - the memory to which the deleted node's
+*WARNING* - the memory to which the deleted node's
 void pointer refers must be dealloc'd,
 otherwise the VM will leak memory with each delete op.
 
-((*SPECIAL CASE*)) - Somehow arrays have to be
+*SPECIAL* *CASE* - Somehow arrays have to be
 accounted for. While I have yet to author a similarly
 vague yet implementable spec for arrays, my mental
 sketch therefore suggests that a dealloc operation on an
