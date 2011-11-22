@@ -115,12 +115,21 @@ void vm_ram_rst(VMRam *ram) {
 
 void vm_ram_assign(VMRam *ram, int index, int value) {
     if(index < ram->used) {
-        ram->regs[index].ptr = value;
+        if(ram->regs[index].used) {
+            free(ram->regs[index].ptr);
+        }
+        ram->regs[index].ptr = malloc(sizeof(int));
+        *ram->regs[index].ptr = value;
+        ram->regs[index].used = 1;
+        ram->regs[index].type = VMInteger;
+
     } else {
         printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
         VMBlock * a = vm_ram_malloc(ram);
         a->ptr = malloc(sizeof(int));
         *a->ptr = value;
+        a->used = 1;
+        a->type = VMInteger;
     }
 }
 
