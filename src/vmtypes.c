@@ -15,6 +15,12 @@ typedef struct {
 } VMRam;
 
 typedef struct {
+    char** code;
+    int    cursor;
+    VMRam* memory;
+} VMachine;
+
+typedef struct {
     char **strings;
     int count;
 } split;
