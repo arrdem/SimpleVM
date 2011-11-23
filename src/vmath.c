@@ -3,6 +3,9 @@
 
 #include "vmtypes.c"
 
+#ifndef _vmath_c_
+#define _vmath_c_
+
 VMBlock * vm_ram_malloc_dynamic(VMRam*);
 
 void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
@@ -70,3 +73,5 @@ void vm_math_div(VMRam *ram, int a, int b, int c) {
 void vm_math_mod(VMRam *ram, int a, int b, int c) {
     vm_math_generic(ram, a, b, c, '%');
 }
+
+#endif

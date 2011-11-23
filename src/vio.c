@@ -28,6 +28,9 @@
 
 #include "vmtypes.c"
 
+#ifndef _vio_c_
+#define _vio_c_
+
 char* vm_io_readf(FILE* file, int line_len) {
     char* line;
     line = malloc(sizeof(char) * line_len);
@@ -39,3 +42,5 @@ char* vm_io_read(FILE* file, char* prompt, int line_len) {
     printf("%s", prompt);
     return vm_io_readf(file, line_len);
 }
+
+#endif
