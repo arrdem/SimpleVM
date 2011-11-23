@@ -34,86 +34,63 @@ int main(int argc, char **argv) {
     int j = 0;
 
     ram = vm_ram_init();
-
     vm_ram_rst(ram);
 
-    while(j < 10) {
-        vm_ram_assign(ram, j, j);
-        j++;
-    }
-
-    vm_ram_free(ram, 3, 1);
-    vm_ram_display(ram);
-    printf("\nCOMPACTING...\n");
-    vm_ram_compact(ram);
-    vm_ram_display(ram);
-    printf("\nGROWING....\n");
-    vm_ram_grow(ram);
-    vm_ram_display(ram);
-    printf("\nDO SOME MATH...\n");
-    j = 0;
-    while(j < 10) {
-        vm_math_mult(ram, j, j+1, j+10);
-        j++;
-    }
-    vm_ram_display(ram);
-    printf("\nLIKE A BAUS.\n");
-
     while(1) {
-        char* s = vm_io_read(stdin, ">>> \0", 80);
-        char * pch;
-        if(!*s) {
-            return 0;
+        int i = 0, j = 0, k = 0;
+        char *s, *d, *pch;
+        s = vm_io_read(stdin, ">>> \0", 80);
+
+        if(!*s) return 0;
+
+        d = s;
+        while(*d != '\0') {
+            *d = toupper((unsigned char)*d);
+            d++;
         }
+
         pch = strtok(s, " \n\t");
 
         if(strcmp(pch, "LET") == 0) {
             // assign to address
-            int i = 0, j = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
-
             vm_ram_assign(ram, i, j);
+
         } else if(strcmp(pch, "ADD") == 0) {
-            int i = 0, j = 0, k = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
-
             vm_math_add(ram, i, j, k);
 
         } else if(strcmp(pch, "SUB") == 0) {
             // subtract
-            int i = 0, j = 0, k = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
-
             vm_math_sub(ram, i, j, k);
+
         } else if(strcmp(pch, "DIV") == 0) {
             // divide
-            int i = 0, j = 0, k = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
-
             vm_math_div(ram, i, j, k);
+
         } else if(strcmp(pch, "MUL") == 0) {
             // multiply
-            int i = 0, j = 0, k = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
-
             vm_math_mult(ram, i, j, k);
+
         } else if(strcmp(pch, "MOD") == 0) {
             // modulus
-            int i = 0, j = 0, k = 0;
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
-
             vm_math_mod(ram, i, j, k);
+
         } else if(strcmp(pch, "DEL") == 0) {
             // delete
             vm_ram_free(ram, atoi(strtok(NULL, " ")), 1);

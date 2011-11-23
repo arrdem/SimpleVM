@@ -67,10 +67,107 @@ VMachine* vm_machine(FILE* source, int line_len) {
                 v->code[lines][j++] = pch;
             } else {
                 v->code[lines][j] = malloc(sizeof(char));
-                *v->code[lines][j++] = '\0';
+                v->code[lines][j++] = '\0';
             }
         }
     }
 
     return v;
+}
+
+void vm_machine_run(VMachine* m) {
+    while(1) {
+        int i = 0, j = 0, k = 0;
+        char *s, *d, *pch;
+        s = m->code[m->cursor];
+
+        if(!*s) goto finally;
+
+        d = s;
+        while(*d != '\0') {
+            *d = toupper((unsigned char)*d);
+            d++;
+        }
+
+        pch = strtok(l, " \n\t");
+
+        if(strcmp(pch, "LET") == 0) {
+            // assign to address
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            vm_ram_assign(ram, i, j);
+
+        } else if(strcmp(pch, "ADD") == 0) {
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            k = atoi(strtok(NULL, " "));
+            vm_math_add(ram, i, j, k);
+
+        } else if(strcmp(pch, "SUB") == 0) {
+            // subtract
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            k = atoi(strtok(NULL, " "));
+            vm_math_sub(ram, i, j, k);
+
+        } else if(strcmp(pch, "DIV") == 0) {
+            // divide
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            k = atoi(strtok(NULL, " "));
+            vm_math_div(ram, i, j, k);
+
+        } else if(strcmp(pch, "MUL") == 0) {
+            // multiply
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            k = atoi(strtok(NULL, " "));
+            vm_math_mult(ram, i, j, k);
+
+        } else if(strcmp(pch, "MOD") == 0) {
+            // modulus
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            k = atoi(strtok(NULL, " "));
+            vm_math_mod(ram, i, j, k);
+
+        } else if(strcmp(pch, "DEL") == 0) {
+            // delete
+            vm_ram_free(ram, atoi(strtok(NULL, " ")), 1);
+        } else if(strcmp(pch, "DSP") == 0) {
+            // print ram
+            vm_ram_display(ram);
+        } else if(strcmp(pch, "HLT") == 0) {
+            break;
+        } else if(strcmp(pch, "RST") == 0) {
+            // reset the VM's ram entirely
+            vm_ram_rst(ram);
+        } else {
+            printf("UNRECOGNIZED: \"%s\"\n",pch);
+        }
+
+        finally: {
+            m->cursor++;
+            continue;
+        }
+
+        exception: {
+            // deal with an error code here...
+            printf("[run] ERROR ENCOUNTERED:\n\t%s", errmsg);
+
+            switch(errcode) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                default:
+            }
+        }
+    }
 }
