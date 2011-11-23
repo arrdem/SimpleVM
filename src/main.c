@@ -122,6 +122,9 @@ int main(int argc, char **argv) {
             vm_ram_display(ram);
         } else if(strcmp(pch, "HLT") == 0) {
             break;
+        } else if(strcmp(pch, "RST") == 0) {
+            // reset the VM's ram entirely
+            vm_ram_rst(ram);
         } else {
             printf("UNRECOGNIZED: \"%s\"\n",pch);
         }
