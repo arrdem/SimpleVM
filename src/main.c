@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
             // assign to address
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
-            vm_ram_assign(ram, i, j);
+            vm_ram_assign_static(ram, i, j);
 
         } else if(strcmp(pch, "ADD") == 0) {
             i = atoi(strtok(NULL, " "));

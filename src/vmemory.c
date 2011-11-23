@@ -47,7 +47,7 @@ void vm_ram_grow(VMRam *ram) {
     ram->regs = newREGS;
 }
 
-VMBlock * vm_ram_malloc(VMRam* ram) {
+VMBlock * vm_ram_malloc_dynamic(VMRam* ram) {
     if(ram->used > ram->size - MEM_PAD) {
         vm_ram_grow(ram);
     }
@@ -56,13 +56,15 @@ VMBlock * vm_ram_malloc(VMRam* ram) {
     return &ram->regs[ram->used++];
 }
 
-VMBlock * vm_ram_malloc(VMRam* ram, int index) {
-    if(ram->used > ram->size - MEM_PAD) {
-        vm_ram_grow(ram);
-    }
-    ram->regs[ram->used].used = 1;
-    ram->regs[ram->used].addr = ram->used;
-    return &ram->regs[ram->used++];
+VMBlock * vm_ram_malloc_static(VMRam* ram, int index) {
+    while(index > ram->size) vm_ram_grow(ram);
+
+    ram->regs[index].used = 1;
+    ram->regs[index].addr = index;
+
+    ram->used = index;
+
+    return &ram->regs[index];
 }
 
 void vm_ram_compact(VMRam* ram) {
@@ -121,7 +123,7 @@ void vm_ram_rst(VMRam *ram) {
     }
 }
 
-void vm_ram_assign(VMRam *ram, int index, int value) {
+void vm_ram_assign_static(VMRam *ram, int index, int value) {
     if(index < ram->used) {
         if(ram->regs[index].used) {
             free(ram->regs[index].ptr);
@@ -133,7 +135,7 @@ void vm_ram_assign(VMRam *ram, int index, int value) {
 
     } else {
         printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
-        VMBlock * a = vm_ram_malloc(ram);
+        VMBlock * a = vm_ram_malloc_static(ram, index);
         a->ptr = malloc(sizeof(int));
         *a->ptr = value;
         a->used = 1;
@@ -142,18 +144,21 @@ void vm_ram_assign(VMRam *ram, int index, int value) {
 }
 
 void vm_ram_assign_dynamic(VMRam *ram, int value) {
-    if(index < ram->used) {
-        if(ram->regs[index].used) {
-            free(ram->regs[index].ptr);
+    ram->used++;
+
+    if(ram->used > ram->size - MEM_PAD) {
+        if(ram->regs[ram->used].used) {
+            free(ram->regs[ram->used].ptr);
         }
-        ram->regs[index].ptr = malloc(sizeof(int));
-        *ram->regs[index].ptr = value;
-        ram->regs[index].used = 1;
-        ram->regs[index].type = VMInteger;
+
+        ram->regs[ram->used].ptr = malloc(sizeof(int));
+        *ram->regs[ram->used].ptr = value;
+        ram->regs[ram->used].used = 1;
+        ram->regs[ram->used].type = VMInteger;
 
     } else {
         printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
-        VMBlock * a = vm_ram_malloc(ram);
+        VMBlock * a = vm_ram_malloc_dynamic(ram);
         a->ptr = malloc(sizeof(int));
         *a->ptr = value;
         a->used = 1;

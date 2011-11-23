@@ -3,14 +3,14 @@
 
 #include "vmtypes.c"
 
-VMBlock * vm_ram_malloc(VMRam*);
+VMBlock * vm_ram_malloc_dynamic(VMRam*);
 
 void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
     int d = 0, e = 0, f = c;
     if(ram->regs[a].used) d = *ram->regs[a].ptr;
     if(ram->regs[b].used) e = *ram->regs[b].ptr;
     if(!ram->regs[c].used) {
-        VMBlock * foo = vm_ram_malloc(ram);
+        VMBlock * foo = vm_ram_malloc_dynamic(ram);
         f = foo->addr;
         foo->ptr = malloc(sizeof(int));
         printf("[MATH] WARNING - %-10i WAS NOT INITIALIZED, USING %i\n", c, f);
