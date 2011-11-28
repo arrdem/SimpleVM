@@ -24,31 +24,20 @@
 #ifndef _vconsts_c_
 #define _vconsts_c_
 
-const int
-// System settings....
-          MIN_MEM     = 15,
-          MIN_SEGS    = 15,
-          MEM_PAD     = 2,
-          LN_TOKS     = 6,
-
-// System values
-//// data types
-          VMPtr       = 0,
-          VMInteger   = 0xAAAAAAAA,
-          VMBoolean   = 0xBBBBBBBB,
-          VMArray     = 0xCCCCCCCC,
-          VMStack     = 0xDDDDDDDD,
-
-//// data values
-          VMTrue      = 1,
+const int VMTrue      = 1,
           VMFalse     = 0,
           VMNull      = 0xDEADBEEF,
           VMNotFound  = 0xFEEDFACE,
 
-//// parser constants
-          VM_SPACE    = 0x10000000,
-          VM_STR      = 0x02000000,
-          VM_INTEGER  = 0x00300000,
-          VM_EOL      = 0x12345678;
+          MIN_MEM     = 15,
+          MIN_SEGS    = 15;
+          MEM_PAD     = 2,
+          LN_TOKS     = 6;
+
+          VMPtr       = 0,
+          VMInteger   = 0xAAAAAAAA,
+          VMBoolean   = 0xBBBBBBBB,
+          VMArray     = 0xCCCCCCCC,
+          VMStack     = 0xDDDDDDDD;
 
 #endif
