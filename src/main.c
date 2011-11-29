@@ -34,6 +34,13 @@ int main(int argc, char **argv) {
     VMachine* turing;
     turing = vm_machine(stdin, 160);
 
+    printf("TRYING TO PRINT MACHINE...\n");
+
+    vm_machine_print(turing);
+
+    printf("EVALUATING.....\n");
+
     vm_machine_run(turing);
+
     return 0;
 }
