@@ -208,6 +208,18 @@ void vm_machine_run(VMachine* m) {
             printf("%c", (char) vm_ram_get(m->memory, i));
             goto finally;
 
+        } else if(strcmp(pch, "PUTS") == 0) {
+            // print a string
+            i = atoi(strtok(NULL, " "));
+
+            char c;
+            do {
+                c = (char) vm_ram_get(m->memory, i++);
+                printf("%c",c);
+            } while (c != '\0');
+
+            goto finally;
+
         } else {
             printf("UNRECOGNIZED: \"%s\"\n",pch);
         }
