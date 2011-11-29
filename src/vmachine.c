@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "vmemory.c"
 #include "vio.c"
@@ -77,6 +78,8 @@ VMachine* vm_machine(FILE* source, int line_len) {
 }
 
 void vm_machine_run(VMachine* m) {
+    srand(time(NULL));
+
     while(1) {
         int i = 0, j = 0, k = 0;
         char *s, *d, *pch;
@@ -97,12 +100,14 @@ void vm_machine_run(VMachine* m) {
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             vm_ram_assign_static(m->memory, i, j);
+            goto finally;
 
         } else if(strcmp(pch, "ADD") == 0) {
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
             vm_math_add(m->memory, i, j, k);
+            goto finally;
 
         } else if(strcmp(pch, "SUB") == 0) {
             // subtract
@@ -110,6 +115,7 @@ void vm_machine_run(VMachine* m) {
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
             vm_math_sub(m->memory, i, j, k);
+            goto finally;
 
         } else if(strcmp(pch, "DIV") == 0) {
             // divide
@@ -117,6 +123,7 @@ void vm_machine_run(VMachine* m) {
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
             vm_math_div(m->memory, i, j, k);
+            goto finally;
 
         } else if(strcmp(pch, "MUL") == 0) {
             // multiply
@@ -124,6 +131,7 @@ void vm_machine_run(VMachine* m) {
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
             vm_math_mult(m->memory, i, j, k);
+            goto finally;
 
         } else if(strcmp(pch, "MOD") == 0) {
             // modulus
@@ -131,15 +139,18 @@ void vm_machine_run(VMachine* m) {
             j = atoi(strtok(NULL, " "));
             k = atoi(strtok(NULL, " "));
             vm_math_mod(m->memory, i, j, k);
+            goto finally;
 
         } else if(strcmp(pch, "DEL") == 0) {
             // delete
             i = atoi(strtok(NULL, " "));
             vm_ram_free(m->memory, i, 1);
+            goto finally;
 
         } else if(strcmp(pch, "DSP") == 0) {
             // print ram
             vm_ram_display(m->memory);
+            goto finally;
 
         } else if(strcmp(pch, "HALT") == 0) {
             break;
@@ -152,12 +163,13 @@ void vm_machine_run(VMachine* m) {
             // the IF -> GOTO statement
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
-            if(((int*) m->memory->regs)[i] > 0) {
+            if(vm_ram_get(m->memory, i) > 0) {
                 m->cursor = j;
                 continue;  // do NOT run the cursor increment code
-            }
+            } else goto finally;
 
         } else if(strcmp(pch, "GOTO") == 0) {
+            // absolute jump
             i = atoi(strtok(NULL, " "));
             if(i <= m->lines) {
                 m->cursor = i;
@@ -166,6 +178,35 @@ void vm_machine_run(VMachine* m) {
                 printf("[FATAL] JUMPED OUT OF LINE BUFFER\n");
                 exit(1);
             }
+
+        } else if(strcmp(pch, "GO") == 0) {
+            // relative jump
+            i = atoi(strtok(NULL, " ")) + m->cursor;
+            if((0 <= i) && (i <= m->lines)) {
+                m->cursor = i;
+                continue;
+            } else {
+                printf("[FATAL] JUMPED OUT OF LINE BUFFER\n");
+                exit(1);
+            }
+
+        } else if(strcmp(pch, "RBIT") == 0) {
+            // generate a random bit and save it.
+            i = atoi(strtok(NULL, " "));
+            vm_ram_assign_static(m->memory, i, (rand() % 2));
+            goto finally;
+
+        } else if(strcmp(pch, "RINT") == 0) {
+            // generate a random bit and save it.
+            i = atoi(strtok(NULL, " "));
+            vm_ram_assign_static(m->memory, i, rand());
+            goto finally;
+
+        } else if(strcmp(pch, "PUT") == 0) {
+            // print a single char
+            i = atoi(strtok(NULL, " "));
+            printf("%c", (char) vm_ram_get(m->memory, i));
+            goto finally;
 
         } else {
             printf("UNRECOGNIZED: \"%s\"\n",pch);
