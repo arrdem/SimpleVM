@@ -34,47 +34,45 @@
 #define _vmachine_c_
 
 VMachine* vm_machine(FILE* source, int line_len) {
-    int lines = 0, j = 0;
     int allocd_lines = 10;
-    char *l, *pch;
+    char c, *cursor;
 
     VMachine* v = malloc(sizeof(VMachine));
     v->memory = vm_ram_init();
     v->cursor = 0;
-    v->code   = malloc(sizeof(char*) * allocd_lines);
+    v->lines  = 0;
 
-    while((l = vm_io_readf(source, line_len)) != NULL) {
-        lines++;
+    v->code    = malloc(sizeof(char*) * allocd_lines);
+    v->code[0] = malloc(sizeof(char) * line_len);
+    cursor = v->code[0];
 
-        if(lines >= allocd_lines) {
-            // we need to grow the char array
-            char* old_code = v->code;
-            int i = allocd_lines, j = allocd_lines;
-            i *= 2;
-            v->code = malloc(sizeof(char*) * i);
+    while(c != EOF) {
+        c = getchar();
+        if((c == '\n')
+            || (c == '\r')) {
+            *cursor = '\0';
 
-            while(j >= 0) {
-                // copy the pointers...
-                v->code[j] = old_code[j];
-                j--;
+            int o;
+            if(v->lines >= allocd_lines) {
+                o = realloc(v->code, sizeof(char) * 2 * allocd_lines);
+                allocd_lines *= 2;
+
+                if(o) {
+                    printf("[DBG] RESIZED LINE ARRAY\n");
+                } else {
+                    printf("[FATAL] FAILED TO RESIZE LINE BUFFER\n");
+                    exit (1);
+                }
             }
 
-            free(old_code); // take out the trash;
+            v->lines++;
+            v->code[v->lines] = malloc(sizeof(char) * line_len);
+            cursor = v->code[v->lines];
+        } else {
+            *cursor = c;
+            cursor++;
         }
-
-        v->code[lines] = malloc(sizeof(char*) * LN_TOKS);
-
-        while(j < LN_TOKS) {
-            pch = strtok(l, " \n\t");
-            if(pch != NULL) {
-                v->code[lines][j++] = pch;
-            } else {
-                v->code[lines][j] = malloc(sizeof(char));
-                v->code[lines][j++] = '\0';
-            }
-        }
-    }
-
+    } *cursor = '\0';
     return v;
 }
 
@@ -138,14 +136,37 @@ void vm_machine_run(VMachine* m) {
             // delete
             i = atoi(strtok(NULL, " "));
             vm_ram_free(m->memory, i, 1);
+
         } else if(strcmp(pch, "DSP") == 0) {
             // print ram
             vm_ram_display(m->memory);
-        } else if(strcmp(pch, "HLT") == 0) {
+
+        } else if(strcmp(pch, "HALT") == 0) {
             break;
+
         } else if(strcmp(pch, "RST") == 0) {
             // reset the VM's ram entirely
             vm_ram_rst(m->memory);
+
+        } else if(strcmp(pch, "IF") == 0) {
+            // the IF -> GOTO statement
+            i = atoi(strtok(NULL, " "));
+            j = atoi(strtok(NULL, " "));
+            if(((int*) m->memory->regs)[i] > 0) {
+                m->cursor = j;
+                continue;  // do NOT run the cursor increment code
+            }
+
+        } else if(strcmp(pch, "GOTO") == 0) {
+            i = atoi(strtok(NULL, " "));
+            if(i <= m->lines) {
+                m->cursor = i;
+                continue;
+            } else {
+                printf("[FATAL] JUMPED OUT OF LINE BUFFER\n");
+                exit(1);
+            }
+
         } else {
             printf("UNRECOGNIZED: \"%s\"\n",pch);
         }
@@ -154,28 +175,13 @@ void vm_machine_run(VMachine* m) {
             m->cursor++;
             continue;
         }
+    }
+}
 
-        exception: {
-            char* errmsg;
-            int errcode;
-            // deal with an error code here...
-            printf("[run] ERROR ENCOUNTERED:\n\t%s", errmsg);
-
-            switch(errcode) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                default:
-                    break;
-            }
-        }
+void vm_machine_print(VMachine* m) {
+    int i = 0;
+    while(i <= m->lines) {
+        printf("%s\n", m->code[i++]);
     }
 }
 
