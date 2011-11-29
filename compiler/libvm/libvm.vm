@@ -1,0 +1,6 @@
+#include libk0;
+#include libk1;
+#include libk_math;
+
+// this file defines __no__ code, and merely serves to emulate a wildcard
+// include for any other .vm file(s).

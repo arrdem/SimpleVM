@@ -1,0 +1,75 @@
+// [STANDARD - RETURN VALUES]
+//     Because KritterKode does not __actually__ implement any sort of return
+//     statement which passes a number or other data, execution flow needs to
+//     play the same role. Ergo a standard on truth and falsehood is imperative.
+//
+//     This is the way that true/false returns __must__ be handled.
+//          $0;
+//          %false_case;
+//          %true_case;
+//
+// This file defines more advanced yet still primitive/fundimental control
+// structures for the KritterKompiler.
+
+while($0, $1) {
+    @beginning;
+    $0;
+    #go %end;
+    $1;
+    #go %beginning;
+    @end;
+}
+
+for($0, $1, $2) {
+    @beginning;
+    $0;
+    #go %end;
+    $2;
+    $1;
+    #go %beginning;
+    @end
+}
+
+if($0, $1) {
+    $0;
+    #go %end;
+    $1;
+    @end;
+}
+
+if($0, $1, $2) {
+    $0;
+    #go %else_form;
+    $1;
+    #go %end;
+    @else_form;
+    $2;
+    @end;
+}
+
+and($0, $1) {
+    $0;
+    #go %end;
+    $1;
+    #go %end;
+    #go +3;
+    @end;
+}
+
+or($0, $1) {
+    $0;
+    #go +2;
+    #go %true;
+    $1;
+    #go %end;
+    #go %true;
+    @true;
+    #go +3;
+    @end;
+}
+
+not($0) {
+    $0;
+    #go +3;
+    #go +1;
+}
