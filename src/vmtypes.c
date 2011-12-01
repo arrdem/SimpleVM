@@ -1,5 +1,5 @@
-#ifndef _vmblock_c_
-#define _vmblock_c_
+#ifndef _VMBLOCK_C_
+#define _VMBLOCK_C_
 
 typedef struct {
     int *ptr;

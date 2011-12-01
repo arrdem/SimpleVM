@@ -21,8 +21,8 @@
  *      SimpleVM project.
  */
 
-#ifndef _vconsts_c_
-#define _vconsts_c_
+#ifndef _VCONSTS_C_
+#define _VCONSTS_C_
 
 const int VMTrue      = 1,
           VMFalse     = 0,
@@ -30,9 +30,9 @@ const int VMTrue      = 1,
           VMNotFound  = 0xFEEDFACE,
 
           MIN_MEM     = 15,
-          MIN_SEGS    = 15;
+          MIN_SEGS    = 15,
           MEM_PAD     = 2,
-          LN_TOKS     = 6;
+          LN_TOKS     = 6,
 
           VMPtr       = 0,
           VMInteger   = 0xAAAAAAAA,

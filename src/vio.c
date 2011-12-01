@@ -28,8 +28,8 @@
 
 #include "vmtypes.c"
 
-#ifndef _vio_c_
-#define _vio_c_
+#ifndef _VIO_C_
+#define _VIO_C_
 
 char* vm_io_readf(FILE* file, int line_len) {
     char* line;

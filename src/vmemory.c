@@ -1,5 +1,5 @@
-#ifndef _vmemory_c_
-#define _vmemory_c_
+#ifndef _VMEMORY_C_
+#define _VMEMORY_C_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +40,7 @@ void vm_ram_free(VMRam* ram, int i, int j) {
 }
 
 void vm_ram_grow(VMRam *ram) {
+    printf("[GROW] GROWING RAM....\n");
     VMBlock * newREGS;
     ram->size = 2 * ram->size;
     newREGS = malloc(ram->size * sizeof(VMBlock));
@@ -133,23 +134,12 @@ void vm_ram_rst(VMRam *ram) {
 }
 
 void vm_ram_assign_static(VMRam *ram, int index, int value) {
-    if(index < ram->used) {
-        if(ram->regs[index].used) {
-            free(ram->regs[index].ptr);
-        }
-        ram->regs[index].ptr = malloc(sizeof(int));
-        *ram->regs[index].ptr = value;
-        ram->regs[index].used = 1;
-        ram->regs[index].type = VMInteger;
+    while(ram->size < index) vm_ram_grow(ram);
 
-    } else {
-        printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
-        VMBlock * a = vm_ram_malloc_static(ram, index);
-        a->ptr = malloc(sizeof(int));
-        *a->ptr = value;
-        a->used = 1;
-        a->type = VMInteger;
-    }
+    ram->regs[index].ptr = malloc(sizeof(int));
+    *ram->regs[index].ptr = value;
+    ram->regs[index].used = 1;
+    ram->regs[index].type = VMInteger;
 }
 
 void vm_ram_assign_dynamic(VMRam *ram, int value) {

@@ -26,17 +26,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 #include "vmemory.c"
 #include "vio.c"
 #include "vconsts.c"
+#include "vmath.c"
 
-#ifndef _vmachine_c_
-#define _vmachine_c_
+#ifndef _VMACHINE_C_
+#define _VMACHINE_C_
+
+void vm_machine_print(VMachine* m) {
+    int i = 0;
+    while(i <= m->lines) {
+        printf("%4i | %s\n",i, m->code[i++]);
+    }
+}
 
 VMachine* vm_machine(FILE* source, int line_len) {
-    int allocd_lines = 10;
-    char c, *cursor;
+    int allocd_lines = 1;
+    char c, *cursor, *alt_lines;
 
     VMachine* v = malloc(sizeof(VMachine));
     v->memory = vm_ram_init();
@@ -48,22 +57,16 @@ VMachine* vm_machine(FILE* source, int line_len) {
     cursor = v->code[0];
 
     while(c != EOF) {
-        c = getchar();
+        c = toupper(getc(source));
         if((c == '\n')
             || (c == '\r')) {
             *cursor = '\0';
 
-            int o;
             if(v->lines >= allocd_lines) {
-                o = realloc(v->code, sizeof(char) * 2 * allocd_lines);
-                allocd_lines *= 2;
-
-                if(o) {
-                    printf("[DBG] RESIZED LINE ARRAY\n");
-                } else {
-                    printf("[FATAL] FAILED TO RESIZE LINE BUFFER\n");
-                    exit (1);
-                }
+                alt_lines = malloc(sizeof(char*) * 2 * allocd_lines);
+                memcpy(alt_lines, v->code, allocd_lines);
+                free(v->code);
+                v->code = alt_lines;
             }
 
             v->lines++;
@@ -79,23 +82,28 @@ VMachine* vm_machine(FILE* source, int line_len) {
 
 void vm_machine_run(VMachine* m) {
     srand(time(NULL));
+    char *l;
+    l = NULL;
 
-    while(1) {
+    while(m->cursor < m->lines) {
         int i = 0, j = 0, k = 0;
-        char *s, *d, *pch;
-        s = m->code[m->cursor];
+        char *pch;
 
-        if(!*s) goto finally;
+        if(l != NULL) free(l);
+        l = malloc(sizeof(char) * 160);
 
-        d = s;
-        while(*d != '\0') {
-            *d = toupper((unsigned char)*d);
-            d++;
+        while(m->code[m->cursor][k] != '\0') {
+            printf("<%i %c> ", k, m->code[m->cursor][k]);
+            l[k] = m->code[m->cursor][k];
+            k++;
         }
 
-        pch = strtok(s, " \n\t");
+        //printf("[%10i] %s\n", m->cursor, m->code[m->cursor]);
 
-        if(strcmp(pch, "LET") == 0) {
+        pch = strtok(l, " ");
+        if(strcmp(l, "") == 0) continue;
+        if(strcmp(pch, "") == 0) continue;
+        else if(strcmp(pch, "LET") == 0) {
             // assign to address
             i = atoi(strtok(NULL, " "));
             j = atoi(strtok(NULL, " "));
@@ -220,21 +228,26 @@ void vm_machine_run(VMachine* m) {
 
             goto finally;
 
+        } else if(strcmp(pch, "PUTI") == 0) {
+            // print an integer
+            printf("%i\n",vm_ram_get(m->memory, atoi(strtok(NULL, " "))));
+            goto finally;
+
         } else {
-            printf("UNRECOGNIZED: \"%s\"\n",pch);
+            printf(
+                "HERP DERP A DERP DE DERP\nUNRECOGNIZED: \"%s\"\n",
+                pch);
+            goto finally;
         }
 
         finally: {
-            m->cursor++;
+            (m->cursor) += 1;
             continue;
         }
-    }
-}
 
-void vm_machine_print(VMachine* m) {
-    int i = 0;
-    while(i <= m->lines) {
-        printf("%s\n", m->code[i++]);
+        die: {
+            exit(1);
+        }
     }
 }
 

@@ -23,11 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vmath.c"
-#include "vconsts.c"
 #include "vmtypes.c"
-#include "vmemory.c"
-#include "vio.c"
 #include "vmachine.c"
 
 int main(int argc, char **argv) {
