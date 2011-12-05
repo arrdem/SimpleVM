@@ -1,4 +1,4 @@
-/*      vmconsts.c
+/*      vmachine.c
  *
  *      Copyright 2011 Reid McKenzie <rmckenzie92@gmail.com>
  *
@@ -17,28 +17,22 @@
  *      Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *      Boston, MA 02110-1301, USA.
  *
- *      This file defines some magic numbers that I use throughout the
- *      SimpleVM project.
+ *      Defines the loader code for the VMachine struct, and also the
+ *      VMachine-based execution functions which actually perform
+ *      VM instruction execution.
  */
 
-#ifndef _VCONSTS_C_
-#define _VCONSTS_C_
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
 
-const int
-// type and basic values
-          VMTrue      = 1,
-          VMFalse     = 0,
-          VMNull      = 0xDEADBEEF,
-          VMNotFound  = 0xFEEDFACE,
-          VMPtr       = 0,
-          VMInteger   = 0xAAAAAAAA,
-          VMBoolean   = 0xBBBBBBBB,
-          VMArray     = 0xCCCCCCCC,
-          VMStack     = 0xDDDDDDDD,
-// settings
-          MIN_MEM     = 15,
-          MIN_SEGS    = 15,
-          MEM_PAD     = 2,
-          LN_TOKS     = 6;
+#include "vmemory.h"
+#include "vconsts.h"
+#include "vmath.h"
 
-#endif
+void vm_machine_print(VMachine*);
+VMachine* vm_machine(FILE*);
+void vm_machine_run(VMachine*);
+

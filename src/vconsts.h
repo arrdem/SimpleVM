@@ -26,19 +26,19 @@
 
 const int
 // type and basic values
-          VMTrue      = 1,
-          VMFalse     = 0,
-          VMNull      = 0xDEADBEEF,
-          VMNotFound  = 0xFEEDFACE,
-          VMPtr       = 0,
-          VMInteger   = 0xAAAAAAAA,
-          VMBoolean   = 0xBBBBBBBB,
-          VMArray     = 0xCCCCCCCC,
-          VMStack     = 0xDDDDDDDD,
+          VMTrue,
+          VMFalse,
+          VMNull,
+          VMNotFound,
+          VMPtr,
+          VMInteger,
+          VMBoolean,
+          VMArray,
+          VMStack,
 // settings
-          MIN_MEM     = 15,
-          MIN_SEGS    = 15,
-          MEM_PAD     = 2,
-          LN_TOKS     = 6;
+          MIN_MEM,
+          MIN_SEGS,
+          MEM_PAD,
+          LN_TOKS;
 
 #endif

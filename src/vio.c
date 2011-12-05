@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "vmtypes.c"
+#include "vmtypes.h"
 
 #ifndef _VIO_C_
 #define _VIO_C_

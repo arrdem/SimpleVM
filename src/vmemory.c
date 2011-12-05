@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vconsts.c"
-#include "vmtypes.c"
+#include "vconsts.h"
+#include "vmtypes.h"
 
 void vm_ram_display(VMRam* ram) {
     int i = 0;

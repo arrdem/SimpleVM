@@ -15,8 +15,8 @@ typedef struct {
 } VMRam;
 
 typedef struct {
-    char opcode[20];
-    int  args[3];
+    char* opcode;
+    int  args[6];
     // basically just overkill the ram..
 } VMInstr;
 

@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vmtypes.c"
-#include "vconsts.c"
+#include "vmtypes.h"
+#include "vconsts.h"
+#include "vmath.h"
 
 #ifndef _VMATH_C_
 #define _VMATH_C_
-
-VMBlock * vm_ram_malloc_dynamic(VMRam*);
 
 void vm_math_generic(VMRam *ram, int a, int b, int c, char opr) {
     int d = 0, e = 0;

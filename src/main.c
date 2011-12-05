@@ -23,12 +23,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "vmtypes.c"
-#include "vmachine.c"
+#include "vmtypes.h"
+#include "vmachine.h"
 
 int main(int argc, char **argv) {
     VMachine* turing;
-    turing = vm_machine(stdin, 160);
+    turing = vm_machine(stdin);
 
     printf("TRYING TO PRINT MACHINE...\n");
 
