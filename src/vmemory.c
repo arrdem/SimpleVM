@@ -46,7 +46,7 @@ void vm_ram_grow(VMRam *ram) {
     newREGS = malloc(ram->size * sizeof(VMBlock));
 
     int i = 0;
-    while(i < ram->used-1) {
+    while(i < ram->used) {
         newREGS[i] = ram->regs[i];
         newREGS[i].ptr = malloc(sizeof(int));
         *newREGS[i].ptr = *ram->regs[i].ptr;
