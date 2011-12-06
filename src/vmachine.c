@@ -85,8 +85,6 @@ VMachine* vm_machine(FILE* source) {
 
         v->code[v->lines].opcode = stoupper(v->code[v->lines].opcode);
 
-        vm_machine_print_instr(&v->code[v->lines], &k);
-
         if(v->lines  == allocd_lines) {
             if(realloc(v->code, allocd_lines * 2 * sizeof(VMInstr))) {
                 allocd_lines *= 2;
@@ -127,27 +125,41 @@ void vm_machine_run(VMachine* m) {
 
         } else if(strcmp(i.opcode, "ADD") == 0) {
             // addition
-            vm_math_add(m->memory, i.args[0], i.args[1], i.args[2]);
+            vm_ram_assign_static(m->memory, i.args[2],
+                                 (*m->memory->regs[i.args[0]].ptr +
+                                   *m->memory->regs[i.args[1]].ptr));
             goto finally;
 
         } else if(strcmp(i.opcode, "SUB") == 0) {
             // subtract
-            vm_math_sub(m->memory, i.args[0], i.args[1], i.args[2]);
+            vm_ram_assign_static(m->memory, i.args[2],
+                                 (*m->memory->regs[i.args[0]].ptr -
+                                   *m->memory->regs[i.args[1]].ptr));
+
             goto finally;
 
         } else if(strcmp(i.opcode, "DIV") == 0) {
             // divide
-            vm_math_div(m->memory, i.args[0], i.args[1], i.args[2]);
+            vm_ram_assign_static(m->memory, i.args[2],
+                                 (*m->memory->regs[i.args[0]].ptr /
+                                   *m->memory->regs[i.args[1]].ptr));
+
             goto finally;
 
         } else if(strcmp(i.opcode, "MUL") == 0) {
             // multiply
-            vm_math_mult(m->memory, i.args[0], i.args[1], i.args[2]);
+            vm_ram_assign_static(m->memory, i.args[2],
+                                 (*m->memory->regs[i.args[0]].ptr *
+                                   *m->memory->regs[i.args[1]].ptr));
+
             goto finally;
 
         } else if(strcmp(i.opcode, "MOD") == 0) {
             // modulus
-            vm_math_mod(m->memory, i.args[0], i.args[1], i.args[2]);
+            vm_ram_assign_static(m->memory, i.args[2],
+                                 (*m->memory->regs[i.args[0]].ptr %
+                                   *m->memory->regs[i.args[1]].ptr));
+
             goto finally;
 
         } else if(strcmp(i.opcode, "DEL") == 0) {

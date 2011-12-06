@@ -40,21 +40,15 @@ void vm_ram_free(VMRam* ram, int i, int j) {
 }
 
 void vm_ram_grow(VMRam *ram) {
-    printf("[GROW] GROWING RAM....\n");
-    VMBlock * newREGS;
-    ram->size = 2 * ram->size;
-    newREGS = malloc(ram->size * sizeof(VMBlock));
-
-    int i = 0;
-    while(i < ram->used) {
-        newREGS[i] = ram->regs[i];
-        newREGS[i].ptr = malloc(sizeof(int));
-        *newREGS[i].ptr = *ram->regs[i].ptr;
-        vm_ram_free(ram, i, 1);
-        i++;
+    //printf("[GROW] GROWING RAM....\n");
+    int i = realloc(ram->regs, ram->size * sizeof(VMBlock) * 2);
+    if(i != NULL) {
+        //printf("[GROW] SUCCESS.\n");
+        ram->size *= 2;
+    } else {
+        printf("[GROW] FAILURE IS FAIL. TERMINATING.\n");
+        exit(1);
     }
-    free(ram->regs);
-    ram->regs = newREGS;
 }
 
 VMBlock * vm_ram_malloc_dynamic(VMRam* ram) {
@@ -67,8 +61,11 @@ VMBlock * vm_ram_malloc_dynamic(VMRam* ram) {
 }
 
 VMBlock * vm_ram_malloc_static(VMRam* ram, int index) {
+    //printf("[STATIC] ALLOCATING.....\n");
     while(index > ram->size) vm_ram_grow(ram);
 
+    if(ram->regs[index].used) free(ram->regs[index].ptr);
+    ram->regs[index].ptr = malloc(sizeof(int));
     ram->regs[index].used = 1;
     ram->regs[index].addr = index;
 
@@ -79,7 +76,7 @@ VMBlock * vm_ram_malloc_static(VMRam* ram, int index) {
 
 void vm_ram_compact(VMRam* ram) {
     int i = 0, j = 0;
-    printf("[COMPACT] ENTER                                     [OKAY]\n");
+    //printf("[COMPACT] ENTER                                     [OKAY]\n");
     // find first un-used cell
     while(i < ram->size) {
         if(ram->regs[i].used == 0) {
@@ -87,7 +84,7 @@ void vm_ram_compact(VMRam* ram) {
         } i++;
     }
 
-    printf("[COMPACT] GOT FIRST GAP                             [OKAY]\n");
+    //printf("[COMPACT] GOT FIRST GAP                             [OKAY]\n");
 
     // make both i and j the first junk index
     j = i;
@@ -113,15 +110,15 @@ void vm_ram_compact(VMRam* ram) {
 
 void vm_ram_rst(VMRam *ram) {
     ram->used = 0;
-    printf("[RST] USED                                          [OKAY]\n");
+    //printf("[RST] USED                                          [OKAY]\n");
 
     if(ram->regs) {
         free(ram->regs);
     }
-    printf("[RST] FREE                                          [OKAY]\n");
+    //printf("[RST] FREE                                          [OKAY]\n");
 
     ram->regs = malloc(ram->size * sizeof(VMBlock));
-    printf("[RST] MALLOC(%-10i)                            [OKAY]\n",(ram->size));
+    //printf("[RST] MALLOC(%-10i)                            [OKAY]\n",(ram->size));
 
     int i = ram->size;
     while(i >= 0) {
@@ -134,6 +131,7 @@ void vm_ram_rst(VMRam *ram) {
 }
 
 void vm_ram_assign_static(VMRam *ram, int index, int value) {
+    //printf("[STATIC] ASSIGNING.... \n");
     while(ram->size < index) vm_ram_grow(ram);
 
     ram->regs[index].ptr = malloc(sizeof(int));
@@ -169,10 +167,9 @@ void vm_ram_assign_dynamic(VMRam *ram, int value) {
 VMRam * vm_ram_init() {
     VMRam * ram;
     ram = malloc(sizeof(VMRam));
-    ram->regs = malloc(sizeof(VMBlock));
+    ram->regs = malloc(sizeof(VMBlock) * MIN_MEM);
     ram->size = MIN_MEM;
     return ram;
 }
-
 
 #endif
