@@ -43,52 +43,57 @@ char* stoupper(char* s) {
     return s;
 }
 
+void vm_machine_print_instr(VMInstr *i, int* lineno) {
+    printf("%4i | %s (%i %i %i %i %i %i)\n",
+               *lineno,
+               i->opcode,
+               i->args[0],
+               i->args[1],
+               i->args[2],
+               i->args[3],
+               i->args[4],
+               i->args[5]);
+}
+
 void vm_machine_print(VMachine* m) {
     int i = 0;
     while(i <= m->lines) {
-        printf("%4i | %s (%i %i %i %i %i %i)\n",
-               i,
-               m->code[i].opcode,
-               m->code[i].args[0],
-               m->code[i].args[1],
-               m->code[i].args[2],
-               m->code[i].args[3],
-               m->code[i].args[4],
-               m->code[i].args[5]);
+        vm_machine_print_instr(&m->code[i], &i);
         i++;
     }
 }
 
 VMachine* vm_machine(FILE* source) {
-    int allocd_lines = 8, cursor = 0;
-
+    int allocd_lines = 8, cursor = 0, k = -1;
     VMachine* v = malloc(sizeof(VMachine));
     v->memory = vm_ram_init();
     v->cursor = 0;
     v->lines  = 0;
-
     v->code    = malloc(sizeof(VMInstr) * allocd_lines);
 
     while(1) {
         v->code[v->lines].opcode = malloc(sizeof(char) * 20);
 
-        if (scanf("%s %i %i %i;",
+        if (scanf("%s %i %i %i %i",
                  v->code[v->lines].opcode,
                  &v->code[v->lines].args[0],
                  &v->code[v->lines].args[1],
-                 &v->code[v->lines].args[2]) == EOF) break;
+                 &v->code[v->lines].args[2],
+                 &v->code[v->lines].args[3]) == EOF) break;
 
         v->code[v->lines].opcode = stoupper(v->code[v->lines].opcode);
 
         if(v->lines  == allocd_lines) {
             if(realloc(v->code, allocd_lines * 2 * sizeof(VMInstr))) {
+                allocd_lines *= 2;
                 printf("[INIT] GREW CODE ARRAY\n");
             } else {
                 printf("[INIT] - FATAL - FAILED TO GROW CODE ARRAY\n");
                 free(v->code);
                 exit(1);
             }
-        } printf("\t[%i]\n",v->lines++);
+        }
+        v->lines++;
     }
     return v;
 }
@@ -99,6 +104,15 @@ void vm_machine_run(VMachine* m) {
 
     while(m->cursor < m->lines) {
         i = m->code[m->cursor];
+        printf("%4i | %s (%i %i %i %i %i %i)\n",
+               m->cursor,
+               i.opcode,
+               i.args[0],
+               i.args[1],
+               i.args[2],
+               i.args[3],
+               i.args[4],
+               i.args[5]);
 
         if(strcmp(i.opcode, "") == 0) continue;
         if(strcmp(i.opcode, "") == 0) continue;
@@ -140,6 +154,11 @@ void vm_machine_run(VMachine* m) {
         } else if(strcmp(i.opcode, "DSP") == 0) {
             // print ram
             vm_ram_display(m->memory);
+            goto finally;
+
+        } else if(strcmp(i.opcode, "DUMP") == 0)  {
+            // prints the code
+            vm_machine_print(m);
             goto finally;
 
         } else if(strcmp(i.opcode, "HALT") == 0) {
