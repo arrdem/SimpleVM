@@ -1,0 +1,99 @@
+# depslib dependency file v1.0
+1323079341 source:/home/reid/Projects/programming/SimpleVM/src/main.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vmachine.h"
+
+1323077253 /home/reid/Projects/programming/SimpleVM/src/vmath.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+	"vmath.h"
+
+1322690318 /home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+
+1322690342 /home/reid/Projects/programming/SimpleVM/src/vconsts.c
+
+1322688316 /home/reid/Projects/programming/SimpleVM/src/vmemory.c
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.c"
+	"vmtypes.c"
+
+1322084925 /home/reid/Projects/programming/SimpleVM/src/vio.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"vmtypes.c"
+
+1322689838 /home/reid/Projects/programming/SimpleVM/src/vmachine.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"vmemory.c"
+	"vio.c"
+	"vconsts.c"
+
+1323076601 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
+
+1323076802 source:/home/reid/Projects/programming/SimpleVM/src/vio.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"vmtypes.h"
+
+1323193313 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+	"vmath.h"
+	<ctype.h>
+
+1323077253 source:/home/reid/Projects/programming/SimpleVM/src/vmath.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+	"vmath.h"
+
+1323076818 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1323079221 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+
+1323079505 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
+
+1323077553 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+	"vmath.h"
+
+1323077120 /home/reid/Projects/programming/SimpleVM/src/vmemory.h
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1323077450 /home/reid/Projects/programming/SimpleVM/src/vconsts.h
+
+1323077250 /home/reid/Projects/programming/SimpleVM/src/vmath.h
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+
