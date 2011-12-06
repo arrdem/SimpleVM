@@ -74,14 +74,18 @@ VMachine* vm_machine(FILE* source) {
     while(1) {
         v->code[v->lines].opcode = malloc(sizeof(char) * 20);
 
-        if (scanf("%s %i %i %i %i",
+        if (scanf("%s %i %i %i %i %i %i %i\n",
                  v->code[v->lines].opcode,
                  &v->code[v->lines].args[0],
                  &v->code[v->lines].args[1],
                  &v->code[v->lines].args[2],
-                 &v->code[v->lines].args[3]) == EOF) break;
+                 &v->code[v->lines].args[3],
+                 &v->code[v->lines].args[4],
+                 &v->code[v->lines].args[5]) == EOF) break;
 
         v->code[v->lines].opcode = stoupper(v->code[v->lines].opcode);
+
+        vm_machine_print_instr(&v->code[v->lines], &k);
 
         if(v->lines  == allocd_lines) {
             if(realloc(v->code, allocd_lines * 2 * sizeof(VMInstr))) {
