@@ -22,12 +22,9 @@ void vm_ram_display(VMRam* ram) {
 }
 
 int vm_ram_get(VMRam* ram, int addr) {
-    if((ram->used >= addr)
-        && (ram->regs[addr].used)) {
-            return *ram->regs[addr].ptr;
-    } else {
-        return 0;
-    }
+    if((ram->size >= addr) && ram->regs[addr].used) {
+        return *ram->regs[addr].ptr;
+    } else return 0;
 }
 
 void vm_ram_free(VMRam* ram, int i, int j) {
