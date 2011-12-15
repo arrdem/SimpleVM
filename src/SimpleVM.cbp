@@ -38,9 +38,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="vconsts.h" />
-		<Unit filename="vio.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="vmachine.c">
 			<Option compilerVar="CC" />
 		</Unit>
