@@ -35,229 +35,78 @@
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
 
-#include <ctype.h>
-
-char* stoupper(char* s) {
-    char* p = s;
-    while (*p = toupper( *p )) p++;
-    return s;
-}
-
-void vm_machine_print_instr(VMInstr *i, int* lineno) {
-    printf("%4i | %s (%i %i %i %i %i %i)\n",
-               *lineno,
-               i->opcode,
-               i->args[0],
-               i->args[1],
-               i->args[2],
-               i->args[3],
-               i->args[4],
-               i->args[5]);
-}
-
 void vm_machine_print(VMachine* m) {
-    int i = 0;
-    while(i <= m->lines) {
-        vm_machine_print_instr(&m->code[i], &i);
-        i++;
+    int k = 0, i;
+    while(k <= m->lines) {
+        printf("[%5i] %s ", k, &m->code[k].text, m->code[k].code[0]);
+        i = 0;
+        while(i < 7) {
+            printf("%10i ", m->code[k].code[i]);
+            i++;
+        }
+        printf("\n");
+        k++;
     }
 }
 
-VMachine* vm_machine(FILE* source) {
-    int allocd_lines = 8, cursor = 0, k = -1;
-    VMachine* v = malloc(sizeof(VMachine));
-    v->memory = vm_ram_init();
-    v->cursor = 0;
-    v->lines  = 0;
-    v->code    = malloc(sizeof(VMInstr) * allocd_lines);
+VMachine* vm_machine(FILE* stream) {
+    int data_size = 2, data_used = 0, i = 0, f, k;
+    VMachine* m;
+    VMLine *data;
+
+    m = malloc(sizeof(VMachine));
+    m->memory = malloc(sizeof(VMBlock));
+    m->lines = 0;
+
+    data = malloc(sizeof(VMLine) * data_size);
 
     while(1) {
-        v->code[v->lines].opcode = malloc(sizeof(char) * 20);
-
-        if (scanf("%s %i %i %i %i %i %i %i\n",
-                 v->code[v->lines].opcode,
-                 &v->code[v->lines].args[0],
-                 &v->code[v->lines].args[1],
-                 &v->code[v->lines].args[2],
-                 &v->code[v->lines].args[3],
-                 &v->code[v->lines].args[4],
-                 &v->code[v->lines].args[5]) == EOF) break;
-
-        v->code[v->lines].opcode = stoupper(v->code[v->lines].opcode);
-
-        if(v->lines  == allocd_lines) {
-            if(realloc(v->code, allocd_lines * 2 * sizeof(VMInstr))) {
-                allocd_lines *= 2;
-                printf("[INIT] GREW CODE ARRAY\n");
-            } else {
-                printf("[INIT] - FATAL - FAILED TO GROW CODE ARRAY\n");
-                free(v->code);
-                exit(1);
+        if(data_size == data_used) {
+            // grow VMLinebuffer
+            VMLine* tmpVMLines = malloc(sizeof(VMLine) * 2 * data_size);
+            memset(tmpVMLines, 0, sizeof(VMLine) * 2 * data_size);
+            int q = 0;
+            while(q < data_used) {
+                tmpVMLines[q] = data[q++];
             }
+            free(data);
+            data = tmpVMLines;
+            data_size *= 2;
         }
-        v->lines++;
-    }
-    return v;
-}
 
-void vm_machine_run(VMachine* m) {
-    srand(time(NULL));
-    VMInstr i;
+        data[data_used].text = malloc(sizeof(char) * 10);
+        data[data_used].code = malloc(7 * sizeof(int));
 
-    while(m->cursor < m->lines) {
-        i = m->code[m->cursor];
-        printf("%4i | %s (%i %i %i %i %i %i)\n",
-               m->cursor,
-               i.opcode,
-               i.args[0],
-               i.args[1],
-               i.args[2],
-               i.args[3],
-               i.args[4],
-               i.args[5]);
-
-        if(strcmp(i.opcode, "") == 0) continue;
-        if(strcmp(i.opcode, "") == 0) continue;
-        else if(strcmp(i.opcode, "LET") == 0) {
-            // assign to address
-            vm_ram_assign_static(m->memory, i.args[0], i.args[1]);
-            goto finally;
-
-        } else if(strcmp(i.opcode, "ADD") == 0) {
-            // addition
-            vm_ram_assign_static(m->memory, i.args[2],
-                                 (*m->memory->regs[i.args[0]].ptr +
-                                   *m->memory->regs[i.args[1]].ptr));
-            goto finally;
-
-        } else if(strcmp(i.opcode, "SUB") == 0) {
-            // subtract
-            vm_ram_assign_static(m->memory, i.args[2],
-                                 (*m->memory->regs[i.args[0]].ptr -
-                                   *m->memory->regs[i.args[1]].ptr));
-
-            goto finally;
-
-        } else if(strcmp(i.opcode, "DIV") == 0) {
-            // divide
-            vm_ram_assign_static(m->memory, i.args[2],
-                                 (*m->memory->regs[i.args[0]].ptr /
-                                   *m->memory->regs[i.args[1]].ptr));
-
-            goto finally;
-
-        } else if(strcmp(i.opcode, "MUL") == 0) {
-            // multiply
-            vm_ram_assign_static(m->memory, i.args[2],
-                                 (*m->memory->regs[i.args[0]].ptr *
-                                   *m->memory->regs[i.args[1]].ptr));
-
-            goto finally;
-
-        } else if(strcmp(i.opcode, "MOD") == 0) {
-            // modulus
-            vm_ram_assign_static(m->memory, i.args[2],
-                                 (*m->memory->regs[i.args[0]].ptr %
-                                   *m->memory->regs[i.args[1]].ptr));
-
-            goto finally;
-
-        } else if(strcmp(i.opcode, "DEL") == 0) {
-            // delete
-            vm_ram_free(m->memory, i.args[0], 1);
-            goto finally;
-
-        } else if(strcmp(i.opcode, "DSP") == 0) {
-            // print ram
-            vm_ram_display(m->memory);
-            goto finally;
-
-        } else if(strcmp(i.opcode, "DUMP") == 0)  {
-            // prints the code
-            vm_machine_print(m);
-            goto finally;
-
-        } else if(strcmp(i.opcode, "HALT") == 0) {
-            break;
-
-        } else if(strcmp(i.opcode, "RST") == 0) {
-            // reset the VM's ram entirely
-            vm_ram_rst(m->memory);
-
-        } else if(strcmp(i.opcode, "IF") == 0) {
-            // the IF -> GOTO statement
-            if(vm_ram_get(m->memory, i.args[0]) > 0) {
-                m->cursor = i.args[1];
-                continue;  // do NOT run the cursor increment code
-            } else goto finally;
-
-        } else if(strcmp(i.opcode, "GOTO") == 0) {
-            // absolute jump
-            if((i.args[0] <= m->lines) && (0 <= i.args[0])) {
-                m->cursor = i.args[0];
-                continue;
-            } else {
-                printf("[FATAL] JUMPED OUT OF LINE BUFFER\n");
-                exit(1);
-            }
-
-        } else if(strcmp(i.opcode, "GO") == 0) {
-            // relative jump
-            if((0 <= i.args[0]) && (i.args[0] <= m->lines)) {
-                m->cursor = i.args[0];
-                continue;
-            } else {
-                printf("[FATAL] JUMPED OUT OF LINE BUFFER\n");
-                exit(1);
-            }
-
-        } else if(strcmp(i.opcode, "RBIT") == 0) {
-            // generate a random bit and save it.
-            vm_ram_assign_static(m->memory, i.args[0], (rand() % 2));
-            goto finally;
-
-        } else if(strcmp(i.opcode, "RINT") == 0) {
-            // generate a random bit and save it.
-            vm_ram_assign_static(m->memory, i.args[0], rand());
-            goto finally;
-
-        } else if(strcmp(i.opcode, "PUT") == 0) {
-            // print a single char
-            printf("%c", (char) vm_ram_get(m->memory, i.args[0]));
-            goto finally;
-
-        } else if(strcmp(i.opcode, "PUTS") == 0) {
-            // print a string
-            int j =  i.args[0];
-            char c;
-            do {
-                c = (char) vm_ram_get(m->memory,j++);
-                printf("%c",c);
-            } while (c != '\0');
-
-            goto finally;
-
-        } else if(strcmp(i.opcode, "PUTI") == 0) {
-            // print an integer
-            printf("%i\n",vm_ram_get(m->memory,  i.args[0]));
-            goto finally;
-
+        f = fscanf(stream, "%s", &data[data_used].text);
+        if(f == EOF) {
+            memset(data[data_used].text, 0, sizeof(char) * 10);
+            goto die;
         } else {
-            printf(
-                "HERP DERP A DERP DE DERP\nUNRECOGNIZED: \"%s\"\n",
-                i.opcode);
-            goto finally;
+            //data[data_used].code[0] = vm_instr_encode(data[data_used].text);
         }
 
-        finally: {
-            (m->cursor) += 1;
-            continue;
+        k = 1;
+        while(k < 7) {
+            f = fscanf(stream, "%i", &data[data_used].code[k++]);
+            if(f == EOF) {
+                data[data_used].code[k-1] = 0;
+                goto die;
+            } else if(f == 0) {
+                data[data_used].code[k-1] = 0;
+            }
         }
 
-        die: {
-            exit(1);
-        }
+        data_used++;
+        continue;
+
+        die:
+            break;
     }
+
+    m->lines = data_used;
+    m->code = data;
+
+    return m;
 }
 
 #endif

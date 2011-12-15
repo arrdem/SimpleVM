@@ -163,7 +163,6 @@ void vm_ram_assign_dynamic(VMRam *ram, int value) {
     }
 }
 
-
 VMRam * vm_ram_init() {
     VMRam * ram;
     ram = malloc(sizeof(VMRam));
