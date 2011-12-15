@@ -32,7 +32,9 @@
 #include "vconsts.h"
 #include "vmath.h"
 
+int vm_machine_hash(char*);
 void vm_machine_print(VMachine*);
 VMachine* vm_machine(FILE*);
+void vm_machine_eval(VMachine*);
 void vm_machine_run(VMachine*);
 

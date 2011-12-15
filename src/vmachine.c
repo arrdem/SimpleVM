@@ -47,7 +47,7 @@ int vm_machine_hash(char* str) {
 }
 
 char* vm_machine_upper(char *str) {
-    // destructive string uppercase function
+    // (destructive?) string uppercase conversion function
     char* p = &str;
     while (*p = toupper(*p)) p++;
     return str;
@@ -126,6 +126,13 @@ VMachine* vm_machine(FILE* stream) {
     m->code = data;
 
     return m;
+}
+
+void vm_machine_eval(VMachine* m) {
+    switch(m->code[m->cursor].code[0]) {
+        default:
+            break;
+    }
 }
 
 #endif
