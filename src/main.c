@@ -36,7 +36,9 @@ int main(int argc, char **argv) {
 
     printf("EVALUATING.....\n");
 
-    //vm_machine_run(turing);
+    turing->cursor = 0;
+
+    vm_machine_run(turing);
 
     return 0;
 }

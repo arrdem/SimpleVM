@@ -131,6 +131,8 @@ void vm_ram_assign_static(VMRam *ram, int index, int value) {
     //printf("[STATIC] ASSIGNING.... \n");
     while(ram->size < index) vm_ram_grow(ram);
 
+
+    if(ram->regs[index].used) free(ram->regs[index].ptr);
     ram->regs[index].ptr = malloc(sizeof(int));
     *ram->regs[index].ptr = value;
     ram->regs[index].used = 1;
@@ -164,6 +166,7 @@ VMRam * vm_ram_init() {
     VMRam * ram;
     ram = malloc(sizeof(VMRam));
     ram->regs = malloc(sizeof(VMBlock) * MIN_MEM);
+    memset(ram->regs, 0, sizeof(VMBlock) * MIN_MEM);
     ram->size = MIN_MEM;
     return ram;
 }

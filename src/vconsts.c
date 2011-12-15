@@ -39,6 +39,8 @@ const int
           MIN_MEM     = 15,
           MIN_SEGS    = 15,
           MEM_PAD     = 2,
-          LN_TOKS     = 6;
+          LN_TOKS     = 6
+
+          ;
 
 #endif

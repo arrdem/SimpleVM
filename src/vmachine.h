@@ -30,7 +30,6 @@
 
 #include "vmemory.h"
 #include "vconsts.h"
-#include "vmath.h"
 
 int vm_machine_hash(char*);
 void vm_machine_print(VMachine*);

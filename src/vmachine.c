@@ -30,7 +30,6 @@
 
 #include "vmemory.h"
 #include "vconsts.h"
-#include "vmath.h"
 
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
@@ -73,7 +72,7 @@ VMachine* vm_machine(FILE* stream) {
     VMLine *data;
 
     m = malloc(sizeof(VMachine));
-    m->memory = malloc(sizeof(VMBlock));
+    m->memory = vm_ram_init();
     m->lines = 0;
 
     data = malloc(sizeof(VMLine) * data_size);
@@ -128,10 +127,265 @@ VMachine* vm_machine(FILE* stream) {
     return m;
 }
 
-void vm_machine_eval(VMachine* m) {
-    switch(m->code[m->cursor].code[0]) {
-        default:
-            break;
+VMachine* vm_machine_eval(VMachine* m) {
+    if((m->cursor < 0) || (m->cursor > m->lines)) {
+        // out of line buffer error state
+        m->errcode = 1;
+        m->errmsg = "CURSOR OUT OF LINE BUFFER";
+    } else {
+        int i;
+        switch(m->code[m->cursor].code[0]) {
+
+
+            case 75259:
+                // LET N1 N2
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[1],
+                                     m->code[m->cursor].code[2]);
+                break;
+
+            case 64641:
+                // ADD N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                 m->code[m->cursor].code[1]) +
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 82464:
+                // SUB N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) -
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 76708:
+                // MUL N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) *
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 67697:
+                // DIV N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) /
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 76514:
+                // MOD N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) %
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 68001:
+                // DSP
+                vm_ram_display(m->memory);
+                break;
+
+            case 2109940:
+                // DUMP
+                vm_machine_print(m);
+                break;
+
+            case 2467642:
+                // PUTI N1
+                printf("%i\n",vm_ram_get(m->memory,m->code[m->cursor].code[1]));
+                break;
+
+            case 2467636:
+                // PUTC N1
+                printf("%c",vm_ram_get(m->memory,m->code[m->cursor].code[1]));
+                break;
+
+            case 2184147:
+                // GETI N1
+                scanf("%i", i);
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[1],
+                                     i);
+                break;
+
+            case 2184141:
+                scanf("%c", i);
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[1],
+                                     i);
+                break;
+
+            case 2531:
+                // OR N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) ||
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 64951:
+                // AND N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) &&
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 87099:
+                // XOR N1 N2 N3le
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1]) ^
+                                        vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[2])
+                                     ));
+                break;
+
+            case 77491:
+                // NOT N1 N2
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[2],
+                                     (!vm_ram_get(m->memory,
+                                                   m->code[m->cursor].code[1])));
+                break;
+
+            case 68006735:
+                // GOTOR N1 (go to line number in register)
+                m->cursor = vm_ram_get(m->memory, m->code[m->cursor].code[1]);
+                goto finally;
+
+            case 68006729:
+                // GOTOL N1 (go to absolute line number (indexed from 0))
+                m->cursor = m->code[m->cursor].code[1];
+                goto finally;
+
+            case 2333:
+                // IF N1
+                if(vm_ram_get(m->memory, m->code[m->cursor].code[1])) {
+                    m->cursor += 1;
+                } else {
+                    m->cursor += 2;
+                }
+                goto finally;
+
+            case 2558355:
+                // SWAP N1 N2
+                // XOR the pointers!
+                *m->memory->regs[m->code[m->cursor].code[1]].ptr ^= *m->memory->regs[m->code[m->cursor].code[2]].ptr;
+                *m->memory->regs[m->code[m->cursor].code[2]].ptr ^= *m->memory->regs[m->code[m->cursor].code[1]].ptr;
+                *m->memory->regs[m->code[m->cursor].code[1]].ptr ^= *m->memory->regs[m->code[m->cursor].code[2]].ptr;
+                break;
+
+            case 2251860:
+                // add 1 to the register
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[1],
+                                     (vm_ram_get(m->memory,
+                                                 m->code[m->cursor].code[1])
+                                        + 1)
+                                     );
+                break;
+
+            case 2094256:
+                // subtract 1
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[1],
+                                     (vm_ram_get(m->memory,
+                                                 m->code[m->cursor].code[1])
+                                        - 1)
+                                     );
+                break;
+
+            case 2360863:
+                // MCPY N1 N2
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[2],
+                                     (vm_ram_get(m->memory,
+                                                 m->code[m->cursor].code[1]))
+                                     );
+                break;
+
+            case 2513316:
+                // RGET N1 N2
+                vm_ram_assign_static(m->memory,
+                                     m->code[m->cursor].code[2],
+                                     (vm_ram_get(m->memory,
+                                                 vm_ram_get(m->memory,
+                                                            m->code[m->cursor].code[1])))
+                                     );
+                break;
+
+            case 2524848:
+                // RSET N1 N2
+                vm_ram_assign_static(m->memory,
+                                     (vm_ram_get(m->memory,
+                                                 vm_ram_get(m->memory,
+                                                            m->code[m->cursor].code[2]))),
+                                     m->code[m->cursor].code[1]
+                                     );
+                break;
+
+            case 2094719:
+                // HERP DERP
+                printf("HERP DERP A DERP DE DEEEEEEEERP\n");
+                exit(9001);
+                break;
+
+            case 2209857:
+                // HALT
+                exit(0); // DIE DIE DIE!!!111!1!!!1
+                break;
+
+            default:
+                printf("ERROR ON LINE %i - UNRECOGNIZED INSTRUCTION - %i\n", m->cursor, m->code[m->cursor].code[0]);
+                break;
+        }
+
+        incriment:
+            m->cursor += 1;
+
+        finally:
+            return m;
+    }
+}
+
+void vm_machine_run(VMachine* m) {
+    while(1) {
+        m = vm_machine_eval(m);
+        if(m->errcode == 0) {
+            // all is well..
+            continue;
+        } else {
+            // deal with error code... how?
+            printf("[ERROR ON LINE %i] %s", m->cursor, m->errmsg);
+            exit(1); // die!
+        }
     }
 }
 
