@@ -71,7 +71,6 @@ or perform untyped operations.
     SWAP     | N1 N2     | swaps the values at N1, N2. Type unsafe.
     MCPY     | N1 N2     | raw memory copy of N1 to N2. Type unsafe.
     DEL      | N1        | raw memory delete of whatever N1 points to.
-    GOTO     | N1        | Jumps to instruction N1
     HALT     |           | Term. execution
 
 == Logic & Binary
@@ -100,3 +99,14 @@ will not feature typing.
     ---------+-----------+-------------------------------------------
     INCR     | N1        | shifts the pointer one address right
     DECR     | N1        | shifts the pointer one address left
+
+== Flow Control
+Obviously I want my final language to be Turing-complete, so flow control
+statements are a must. SimpleVM will support the following basic forms of
+branching:
+
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    GOTOL    | N1        | moves the execution cursor to line number N1
+    GOTOR    | N1        | moves the execution cursor to the line indicated by the value at register N1
+    IF       | N1        | moves the execution cursor +1 if the value at register N1 > 0, else cursor += 2
