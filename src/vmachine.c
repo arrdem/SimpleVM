@@ -35,6 +35,16 @@
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
 
+int vm_machine_hash(char* str) {
+    char* s = &str;
+    int h = 0;
+    while(*s != '\0') {
+        h = 31 * h + (int) *s;
+        s++;
+    }
+    return h;
+}
+
 void vm_machine_print(VMachine* m) {
     int k = 0, i;
     while(k <= m->lines) {
@@ -74,15 +84,15 @@ VMachine* vm_machine(FILE* stream) {
             data_size *= 2;
         }
 
-        data[data_used].text = malloc(sizeof(char) * 10);
         data[data_used].code = malloc(7 * sizeof(int));
 
+        data[data_used].text = malloc(sizeof(char)*10);
         f = fscanf(stream, "%s", &data[data_used].text);
         if(f == EOF) {
             memset(data[data_used].text, 0, sizeof(char) * 10);
             goto die;
         } else {
-            //data[data_used].code[0] = vm_instr_encode(data[data_used].text);
+            data[data_used].code[0] = vm_machine_hash(data[data_used].text);
         }
 
         k = 1;
