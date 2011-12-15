@@ -36,6 +36,7 @@
 #define _VMACHINE_C_
 
 int vm_machine_hash(char* str) {
+    // implimentation of the Java string hashing function
     char* s = &str;
     int h = 0;
     while(*s != '\0') {
@@ -43,6 +44,13 @@ int vm_machine_hash(char* str) {
         s++;
     }
     return h;
+}
+
+char* vm_machine_upper(char *str) {
+    // destructive string uppercase function
+    char* p = &str;
+    while (*p = toupper(*p)) p++;
+    return str;
 }
 
 void vm_machine_print(VMachine* m) {
@@ -92,7 +100,8 @@ VMachine* vm_machine(FILE* stream) {
             memset(data[data_used].text, 0, sizeof(char) * 10);
             goto die;
         } else {
-            data[data_used].code[0] = vm_machine_hash(data[data_used].text);
+            data[data_used].text = vm_machine_upper(data[data_used].text);
+             data[data_used].code[0] = vm_machine_hash(data[data_used].text);
         }
 
         k = 1;
