@@ -1,60 +1,59 @@
 =Simple VM
-Simple VM is just what it claims to be, a simple c virtual machine
-designed to emulate an infinite memory register machine.
-When finished, Simple VM will provide builtins such as pointers,
-arrays, integer arithmetic, boolean logic and conditional branching.
-
-== Background
-As one of my "CS 101" equivalent projects at UT Austin, I had the
-pleasure of implimenting a simple interpreter for a scripting language
-designed to specify the behavior of virtual insects. This language
-doubed "Critter Code" proved very difficult to write and debug by hand
-so I developed a compiler named "KritterKompiler" (yay creativity)
-which would take C-like code and translate it into raw critter opcodes.
-
-When the dust cleared and my critter lost by a slim margin in the
-contest it hit me that I had a working C to ASM translator and no bild
-target. Hence Simple VM.
-
-== Feature Set
-While the Critter environment was incredibly restrictive, giving me only
-"GOTO" statements, integer increment/decrement operations and taunting
-me with ten integer memory blocks the Simple VM environment is designed
-with no such failings in mind.
-* Dynamic registers - the VM's ability to store data grows as you use more
-* Raw STDIN/STDOUT IO - when done SimpleVM will provide printing and
-  reading of c-style char(integer ord) arrays.
+Simple VM is just what it claims to be, a simple c virtual machine designed to
+emulate an infinite memory register or Turing machine. When finished, Simple VM
+will provide builtins such as pointers, integer arithmetic, boolean logic and
+conditional branching. Some other features such as support for parallel code
+executuion, register/memory locking and user defined functions may be added.0
 
 == Current State
-As SimpleVM is a pet project, any time I devote to it is too much. That
-infuriating fact aside, Simple VM is still very much in development.
-As of now, the following features work
-* RAM printing
-* RAM growing
-* RAM garbage collecting
-* Integer Addition, Subtraction, Mult and Div between RAM addresses
+At present, I would say that SimpleVM is in the 1.X version range as all the
+basic functionality required for Turing completeness (integer math, branching)
+are in place and work as well as I could hope.
 
-The following features are still to be finnished
-* STDIN interpreter for typed code
-* General parser for input code whatever source
-* Improved memory management
-* Improved addressing system
-* Named (string name) variables independant of addresses
+== ToDo List
+ * Parallelism through threading and a fork instruction
+ * Support for a PASCAL P-CODE like compiled binary file
+ * Support for user-defined named verbs
+ * Private memory space for such functions seperate from the program core
+ * Add a call stack for user-defined functions
+ * Storage of program instructions in the memory core with program data
+ * Add a framebuffer or other pixel display which can be manipulated by programs
 
-== File Structure
-While it may seem that I have a lot written down here about the how
-and why of my creation, believe me when I say that my notes on register
-machine design and old microprocessor verb sets are more extensive.
-This file is simply an introduction suitable for someone browsing GH
-at random. For greater technical detail and most importantly an
-instruction set specification check out the "doc" folder. If I have
-devised an answer, work around or hack it is documented somewhere
-therein.
+== Instruction Set
+	  OPCODE     | HASH      | ARGUMENTS | OPERATION
+	-------------+-----------+-----------+------------------------------------------
+	    ADD      | 64641     | N1 N2 N3  | N3 := N1 + N2
+	    AND      | 64951     | N1 N2 N3  | N3 := N1 && N2
+	    DECR     | 2094256   | N1        | N1 := N1 - 1
+	    DIV      | 67697     | N1 N2 N3  | N3 := N1 / N2
+	    DSP      | 68001     |           | dumps the VM's RAM to STDOUT
+	    DUMP     | 2109940   |           | dumps the VM's program code to STDOUT
+	    GETC     | 2184141   | N1        | reads a character code into register N1
+	    GETI     | 2184147   | N1        | reads an integer into register N1
+	    GOTOL    | 68006729  | N1        | C := N1
+	    GOTOR    | 68006735  | N1        | C := REGS[N1]
+	    HALT     | 2209857   |           | Term. execution
+	    IF       | 2333      | N1        | IF(REGS[N1]){C := C+1} ELSE {C := C+2}
+	    INCR     | 2251860   | N1        | N1 := N1 + 1
+	    LSFT     | 2346133   | N1        | N1 := N1<<1
+	    MCPY     | 2360863   | N1 N2     | N2 := N1
+	    MOD      | 76514     | N1 N2 N3  | N3 := N1 % N2
+	    MUL      | 76708     | N1 N2 N3  | N3 := N1 * N2
+	    NOT      | 77491     | N1 N3     | N3 := !N1
+	    OR       | 2531      | N1 N2 N3  | N3 := N1 || N2
+	    PUTC     | 2467636   | N1        | printf("%c", regs[N1]);
+	    PUTI     | 2467642   | N1        | printf("%i", regs[N1]);
+	    RGET     | 2513316   | N1 N2     | regs[N2] = regs[regs[N1]] (pointer deref)
+	    RSET     | 2524848   | N1 N2     | regs[regs[N1]] = regs[N2] (pointer write)
+	    RSFT     | 2524879   | N1        | N1 := N1>>1
+	    SUB      | 82464     | N1 N2 N3  | N3 := N1 - N2
+	    SWAP     | 2558355   | N1 N2     | swaps the values at N1, N2.
+	    XOR      | 87099     | N1 N2 N3  | N3 :=(N1 & !N2) || (!N1 & N2)
 
-== Disclaimer and Closing Comments
-This c was hacked together in under seventy-two hours by a college freshman
+== Disclaimer
+This c was hacked together in two weeks by a college freshman
 who hadn't touched C before in his life. If you use this code for
-anything serious, you are nuts to put it kindly.
+anything important serious, you are nuts to put it kindly.
 
 That said, all this code is GPL'd. Special arrangements could be made
 if someone has need of a different lisence but I can't imagine why.
