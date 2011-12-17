@@ -146,46 +146,102 @@ VMachine* vm_machine_eval(VMachine* m) {
 
             case 64641:
                 // ADD N1 N2 N3
-                vm_ram_assign_static(m->memory,
-                                     m->code[m->cursor].code[3],
-                                     (vm_ram_get(m->memory,
-                                                 m->code[m->cursor].code[1]) +
-                                        vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[2])
-                                     ));
+                i = (vm_ram_get(m->memory,
+                                m->code[m->cursor].code[1]) +
+                                vm_ram_get(m->memory,
+                                           m->code[m->cursor].code[2]));
+
+                if ((vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i < 0)) ||
+                    (!vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        !vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0))) {
+                    // an integer overflow has occured...
+                    m->errcode = 2;
+                    m->errmsg = "INTEGER OVERFLOW";
+                    goto finally;
+                } else {
+                    // the addition is fine...
+                    vm_ram_assign_static(m->memory,
+                                         m->code[m->cursor].code[3], i
+                                         );
+                }
                 break;
 
             case 82464:
                 // SUB N1 N2 N3
-                vm_ram_assign_static(m->memory,
-                                     m->code[m->cursor].code[3],
-                                     (vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[1]) -
-                                        vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[2])
-                                     ));
+                i = (vm_ram_get(m->memory,
+                                m->code[m->cursor].code[1]) -
+                                vm_ram_get(m->memory,
+                                           m->code[m->cursor].code[2]));
+
+                if ((vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0)) ||
+                    (!vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        !vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i < 0))) {
+                    // an integer overflow has occured...
+                    m->errcode = 2;
+                    m->errmsg = "INTEGER UNDERFLOW";
+                    goto finally;
+                } else {
+                    // the addition is fine...
+                    vm_ram_assign_static(m->memory,
+                                         m->code[m->cursor].code[3], i
+                                         );
+                }
                 break;
 
             case 76708:
                 // MUL N1 N2 N3
-                vm_ram_assign_static(m->memory,
-                                     m->code[m->cursor].code[3],
-                                     (vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[1]) *
-                                        vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[2])
-                                     ));
+                i = (vm_ram_get(m->memory,
+                                m->code[m->cursor].code[1]) *
+                                vm_ram_get(m->memory,
+                                           m->code[m->cursor].code[2]));
+
+                if ((!vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0)) ||
+                    (vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        !vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0))) {
+                    // an integer overflow has occured...
+                    m->errcode = 2;
+                    m->errmsg = "INTEGER UNDERFLOW";
+                    goto finally;
+                } else {
+                    // the addition is fine...
+                    vm_ram_assign_static(m->memory,
+                                         m->code[m->cursor].code[3], i
+                                         );
+                }
                 break;
 
             case 67697:
                 // DIV N1 N2 N3
-                vm_ram_assign_static(m->memory,
-                                     m->code[m->cursor].code[3],
-                                     (vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[1]) /
-                                        vm_ram_get(m->memory,
-                                                   m->code[m->cursor].code[2])
-                                     ));
+                i = (vm_ram_get(m->memory,
+                                m->code[m->cursor].code[1]) /
+                                vm_ram_get(m->memory,
+                                           m->code[m->cursor].code[2]));
+
+                if ((!vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0)) ||
+                    (vm_ram_get(m->memory, m->code[m->cursor].code[1]) &&
+                        !vm_ram_get(m->memory, m->code[m->cursor].code[2]) &&
+                        (i > 0))) {
+                    // an integer overflow has occured...
+                    m->errcode = 2;
+                    m->errmsg = "INTEGER UNDERFLOW";
+                    goto finally;
+                } else {
+                    // the addition is fine...
+                    vm_ram_assign_static(m->memory,
+                                         m->code[m->cursor].code[3], i
+                                         );
+                }
                 break;
 
             case 76514:
@@ -211,7 +267,7 @@ VMachine* vm_machine_eval(VMachine* m) {
 
             case 2467642:
                 // PUTI N1
-                printf("%i\n",vm_ram_get(m->memory,m->code[m->cursor].code[1]));
+                printf("%i\n", vm_ram_get(m->memory, m->code[m->cursor].code[1]));
                 break;
 
             case 2467636:
@@ -221,6 +277,7 @@ VMachine* vm_machine_eval(VMachine* m) {
 
             case 2184147:
                 // GETI N1
+                printf("[GETI - REG %i] > ", m->code[m->cursor].code[1]);
                 scanf("%i", i);
                 vm_ram_assign_static(m->memory,
                                      m->code[m->cursor].code[1],
@@ -228,6 +285,8 @@ VMachine* vm_machine_eval(VMachine* m) {
                 break;
 
             case 2184141:
+                //GETC N1
+                printf("[GETC - REG %i] > ", m->code[m->cursor].code[1]);
                 scanf("%c", i);
                 vm_ram_assign_static(m->memory,
                                      m->code[m->cursor].code[1],
