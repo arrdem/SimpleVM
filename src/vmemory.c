@@ -130,10 +130,7 @@ void vm_ram_rst(VMRam *ram) {
 void vm_ram_assign_static(VMRam *ram, int index, int value) {
     //printf("[STATIC] ASSIGNING.... \n");
     while(ram->size < index) vm_ram_grow(ram);
-
-
-    if(ram->regs[index].used) free(ram->regs[index].ptr);
-    ram->regs[index].ptr = malloc(sizeof(int));
+    if(!ram->regs[index].used) ram->regs[index].ptr = malloc(sizeof(int));
     *ram->regs[index].ptr = value;
     ram->regs[index].used = 1;
     ram->regs[index].type = VMInteger;
