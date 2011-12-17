@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1323920541 source:/home/reid/Projects/programming/SimpleVM/src/main.c
+1323930556 source:/home/reid/Projects/programming/SimpleVM/src/main.c
 	<stdio.h>
 	<stdlib.h>
 	"vmtypes.h"
@@ -37,7 +37,7 @@
 	"vio.c"
 	"vconsts.c"
 
-1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
+1323964882 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
 
 1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vio.c
 	<stdio.h>
@@ -45,7 +45,7 @@
 	<string.h>
 	"vmtypes.h"
 
-1323928241 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
+1324149116 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -53,7 +53,6 @@
 	<ctype.h>
 	"vmemory.h"
 	"vconsts.h"
-	"vmath.h"
 
 1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vmath.c
 	<stdio.h>
@@ -62,17 +61,17 @@
 	"vconsts.h"
 	"vmath.h"
 
-1323882797 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
+1323999376 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
 	<stdio.h>
 	<stdlib.h>
 	"vconsts.h"
 	"vmtypes.h"
 
-1323919897 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+1323999366 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
 
-1323919811 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
+1323999360 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
 
-1323211089 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
+1323981329 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -80,7 +79,6 @@
 	<ctype.h>
 	"vmemory.h"
 	"vconsts.h"
-	"vmath.h"
 
 1323210959 /home/reid/Projects/programming/SimpleVM/src/vmemory.h
 	<stdio.h>

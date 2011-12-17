@@ -42,10 +42,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="vmachine.h" />
-		<Unit filename="vmath.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="vmath.h" />
 		<Unit filename="vmemory.c">
 			<Option compilerVar="CC" />
 		</Unit>

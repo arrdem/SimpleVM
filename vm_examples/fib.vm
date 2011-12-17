@@ -1,0 +1,7 @@
+let 0 1
+let 1 1
+add 0 1 1
+puti 1
+add 1 0 0
+puti 0
+gotol 2 

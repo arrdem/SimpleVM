@@ -58,6 +58,9 @@ to implement and the rough syntax which I plan to use therefor.
     MUL      | N1 N2 N3  | N3 := N1 * N2
     DIV      | N1 N2 N3  | N3 := N1 / N2
     MOD      | N1 N2 N3  | N3 := N1 % N2
+    INCR     | N1        | add one
+    DECR     | N1        | subtract one
+
 
 == System
 System opcodes are for the most part type-insensitive
@@ -65,9 +68,6 @@ or perform untyped operations.
 
     OpCode   | Args      | Description
     ---------+-----------+-------------------------------------------
-    DINT     | N1        | creates an int at N1
-    DBIT     | N1        | creates a bool N1
-    DPTR     | N1 N2     | creates a pointer at N1 to N2
     SWAP     | N1 N2     | swaps the values at N1, N2. Type unsafe.
     MCPY     | N1 N2     | raw memory copy of N1 to N2. Type unsafe.
     DEL      | N1        | raw memory delete of whatever N1 points to.
@@ -83,22 +83,16 @@ or perform untyped operations.
     RSFT     | N1        | shifts the value at N1 right one bit, truncating for space and padding with 0
     LSFT     | N1        | shifts the value at N1 left one bit, truncating for space and padding with 0
 
-== Stacks
-    OpCode   | Args      | Description
-    ---------+-----------+-------------------------------------------
-    PUSH     | N1 N2     | push N1 onto stack N2
-    POP      | N1 N2     | pop from N1 into N2
-
 == Pointers
 Within SimpleVM, pointers are untyped references to some block of
-memory. They are intended to allow for the implementation of features
-like arrays and pass-by-reference, but for simplicity's sake they
-will not feature typing.
+memory. As in C, pointers are simply integer data with a few operations
+(here only two) which will serve to 
 
     OpCode   | Args      | Description
     ---------+-----------+-------------------------------------------
-    INCR     | N1        | shifts the pointer one address right
-    DECR     | N1        | shifts the pointer one address left
+    rget     | N1 N2     | regs[N2] = regs[regs[N1]] (pointer dereference)
+    rset     | N1 N2     | regs[regs[N1]] = regs[N2] (pointer write)
+
 
 == Flow Control
 Obviously I want my final language to be Turing-complete, so flow control
@@ -110,3 +104,15 @@ branching:
     GOTOL    | N1        | moves the execution cursor to line number N1
     GOTOR    | N1        | moves the execution cursor to the line indicated by the value at register N1
     IF       | N1        | moves the execution cursor +1 if the value at register N1 > 0, else cursor += 2
+
+== Input/Output
+What good is the VM if all it can do is crunch numbers? Printing is where it's at.
+
+    OpCode   | Args      | Description
+    ---------+-----------+-------------------------------------------
+    PUTI     | N1        | prints the value of register N1 as an integer
+    PUTC     | N1        | prints the value of register N1 as a character code
+    GETI     | N1        | reads an integer into register N1
+    GETC     | N1        | reads a character code into register N1
+    DSP      |           | dumps the VM's RAM to STDOUT
+    DUMP     |           | dumps the VM's program code to STDOUT
