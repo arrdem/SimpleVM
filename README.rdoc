@@ -6,9 +6,10 @@ conditional branching. Some other features such as support for parallel code
 executuion, register/memory locking and user defined functions may be added.0
 
 == Current State
-At present, I would say that SimpleVM is in the 1.X version range as all the
+At present, I would say that SimpleVM is in the 1.1 version range as all the
 basic functionality required for Turing completeness (integer math, branching)
-are in place and work as well as I could hope.
+are in place and work as well as I could hope. Some limited parallelism is now
+featured as well, with the OPCODE language featuring FORK and JOIN words.
 
 == ToDo List
  * Parallelism through threading and a fork instruction
@@ -62,5 +63,3 @@ This c was hacked together in two weeks by a college freshman
 who hadn't touched C before in his life. If you use this code for
 anything important serious, you are nuts to put it kindly.
 
-That said, all this code is GPL'd. Special arrangements could be made
-if someone has need of a different lisence but I can't imagine why.
