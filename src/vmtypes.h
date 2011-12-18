@@ -1,5 +1,7 @@
-#ifndef _VMBLOCK_C_
-#define _VMBLOCK_C_
+#include "stack.h"
+
+#ifndef _VMBLOCK_H_
+#define _VMBLOCK_H_
 
 typedef struct {
     int*     ptr;
@@ -20,12 +22,13 @@ typedef struct {
 } VMLine;
 
 typedef struct {
-    VMRam*   memory;
-    VMLine*  code;
-    int      lines;
-    int      cursor;
-    char*    errmsg;
-    int      errcode;
+    // stuff from 1.0 for the machine
+    VMRam*              memory;
+    VMLine*             code;
+    int                 lines;
+    stack*              cursors;
+    char*               errmsg;
+    int                 errcode;
 } VMachine;
 
 #define VMBlockSize sizeof(VMBlock);
