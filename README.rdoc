@@ -61,4 +61,4 @@ who hadn't touched C before in his life. If you use this code for
 anything important serious, you are nuts to put it kindly.
 
 That said, all this code is GPL'd. Special arrangements could be made
-if someone has need of a different lisence but I can't imagine why.
+if someone has need of a different license but I can't imagine why.
