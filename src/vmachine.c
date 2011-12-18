@@ -357,7 +357,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
                 } else {
                     line += 2;
                 }
-                goto finally;
+                11y;
 
             case 2558355:
                 // SWAP N1 N2
@@ -419,6 +419,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
             case 2163906:
                 // FORK N1
                 // creates a new "thread" (really a cursor) on line N1
+                stack_push(m->cursors, m->code[line].code[1]);
                 break;
 
             case 2282794:
@@ -438,7 +439,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
 
             case 2209857:
                 // HALT
-                exit(0); // DIE DIE DIE!!!111!1!!!1
+                exit(m->code[line].code[1]); // DIE DIE DIE!!!111!1!!!1
                 break;
 
             default:
