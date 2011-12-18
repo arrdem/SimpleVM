@@ -424,7 +424,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
             case 2282794:
                 // JOIN
                 // kills the existing "thread" (really a cursor)
-                break;
+                return m; // I die, remember?
 
             case 2402146:
                 // NOOP
