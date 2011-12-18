@@ -1,3 +1,13 @@
+/*      vmtypes.c
+ *      Copyright 2011 Reid McKenzie <rmckenzie92@gmail.com>
+ *      This code and all other code in the project may be used
+ *      or re-used for any purpose at all, so long as I am
+ *      made aware of my contribution.
+ *
+ *      may be un-needed, but it lays out all the typedefs and
+ *      structs used in this project just in case.
+ */
+
 #include "stack.h"
 
 #ifndef _VMBLOCK_H_
