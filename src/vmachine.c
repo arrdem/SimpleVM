@@ -260,17 +260,17 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
 
             case 2467642:
                 // PUTI N1
-                printf("%i\n", vm_ram_get(m->memory, m->code[line].code[1]));
+                printf("[PUTI LINE %i] %i\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
                 break;
 
             case 2467636:
                 // PUTC N1
-                printf("%c",vm_ram_get(m->memory,m->code[line].code[1]));
+                printf("[PUTC LINE %i] %c\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
                 break;
 
             case 2184147:
                 // GETI N1
-                printf("[GETI - REG %i] > ", m->code[line].code[1]);
+                printf("[GETI LINE %i - REG %i] > ", line,  m->code[line].code[1]);
                 scanf("%i", i);
                 vm_ram_assign_static(m->memory,
                                      m->code[line].code[1],
@@ -279,7 +279,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
 
             case 2184141:
                 //GETC N1
-                printf("[GETC - REG %i] > ", m->code[line].code[1]);
+                printf("[GETC LINE %i - REG %i] > ", line, m->code[line].code[1]);
                 scanf("%c", i);
                 vm_ram_assign_static(m->memory,
                                      m->code[line].code[1],
@@ -344,7 +344,7 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
                 } else {
                     line += 2;
                 }
-                11y;
+                goto finally;
 
             case 2558355:
                 // SWAP N1 N2
@@ -406,9 +406,6 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
             case 2163906:
                 // FORK N1
                 // creates a new "thread" (really a cursor) on line N1
-                stack_push(m->cursors, m->code[line].code[1]);
-                stack_push(m->cursors, m->code[line].code[1]);
-                stack_push(m->cursors, m->code[line].code[1]);
                 stack_push(m->cursors, m->code[line].code[1]);
                 break;
 
