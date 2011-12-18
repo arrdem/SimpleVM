@@ -410,6 +410,10 @@ VMachine* vm_machine_eval(VMachine* m) {
                                      );
                 break;
 
+            case 2402146:
+                // NOOP
+                break;
+
             case 2094719:
                 // HERP DERP
                 printf("HERP DERP A DERP DE DEEEEEEEERP\n");

@@ -35,10 +35,12 @@ are in place and work as well as I could hope.
         HALT     | 2209857   |           | Term. execution
         IF       | 2333      | N1        | IF(REGS[N1]){C := C+1} ELSE {C := C+2}
         INCR     | 2251860   | N1        | N1 := N1 + 1
+        LET      | 75259     | N1 N2     | N1 := N2
         LSFT     | 2346133   | N1        | N1 := N1<<1
         MCPY     | 2360863   | N1 N2     | N2 := N1
         MOD      | 76514     | N1 N2 N3  | N3 := N1 % N2
         MUL      | 76708     | N1 N2 N3  | N3 := N1 * N2
+        NOOP     | 2402146   |           | no-op
         NOT      | 77491     | N1 N3     | N3 := !N1
         OR       | 2531      | N1 N2 N3  | N3 := N1 || N2
         PUTC     | 2467636   | N1        | printf("%c", regs[N1]);
