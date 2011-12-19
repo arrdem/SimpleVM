@@ -61,5 +61,5 @@ for the instruction number cursor.
 == Disclaimer
 This c was hacked together in two weeks by a college freshman
 who hadn't touched C before in his life. If you use this code for
-anything important serious, you are nuts to put it kindly.
+anything important, you are nuts to put it kindly.
 
