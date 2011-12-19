@@ -32,7 +32,7 @@ for the instruction number cursor.
         DIV      | 67697     | N1 N2 N3  | REGS[N3] := REGS[N1] / REGS[N2]
         DSP      | 68001     |           | dumps the VM's RAM to STDOUT
         DUMP     | 2109940   |           | dumps the VM's program code to STDOUT
-        FORK     | 2163906   | N1        | creates a new cursor at line N1
+        FORK     | 2163906   | N1 N2     | creates a new cursor at line N1, writes an ID to N2
         GETC     | 2184141   | N1        | reads a character code into register N1
         GETI     | 2184147   | N1        | reads an integer into register N1
         GOTOL    | 68006729  | N1        | C := N1
@@ -40,7 +40,7 @@ for the instruction number cursor.
         HALT     | 2209857   | N1        | kills entire VM with exit code
         IF       | 2333      | N1        | IF(REGS[N1]){C := C+1} ELSE {C := C+2}
         INCR     | 2251860   | N1        | REGS[N1] := REGS[N1] + 1
-        JOIN     | 2282794   |           | kills current cursor
+        JOIN     | 2282794   | N1        | kills process with an ID at N1, or the current one if REGS[N1] <= 0
         LET      | 75259     | N1 N2     | REGS[N1] := N2
         LSFT     | 2346133   | N1        | REGS[N1] := REGS[N1]<<1
         MCPY     | 2360863   | N1 N2     | REGS[N2] := REGS[N1]
