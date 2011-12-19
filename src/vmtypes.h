@@ -7,7 +7,7 @@
  *      lays out all the types and structs nicely for GCC
  */
 
-#include "stack.h"
+#include "linklist.h"
 
 #ifndef _VMBLOCK_H_
 #define _VMBLOCK_H_
@@ -31,11 +31,20 @@ typedef struct {
 } VMLine;
 
 typedef struct {
+    int      line;
+    int      id;
+    int      prio;
+} VMThread;
+
+typedef struct {
     // stuff from 1.0 for the machine
     VMRam*              memory;
     VMLine*             code;
     int                 lines;
-    stack*              cursors;
+
+    ll*                 threads;
+    int                 threadcount;
+
     char*               errmsg;
     int                 errcode;
 } VMachine;

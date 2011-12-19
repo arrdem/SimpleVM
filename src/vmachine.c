@@ -18,7 +18,7 @@
 
 #include "vmemory.h"
 #include "vconsts.h"
-#include "stack.h"
+#include "linklist.h"
 
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
@@ -55,6 +55,14 @@ void vm_machine_print(VMachine* m) {
     }
 }
 
+VMThread* vm_thread(int line, int id, int prio) {
+    VMThread *t = malloc(sizeof(VMThread));
+    t->id = id;
+    t->prio = prio;
+    t->line = line;
+    return t;
+}
+
 VMachine* vm_machine(FILE* stream) {
     int data_size = 2, data_used = 0, i = 0, f, k;
     VMachine* m;
@@ -63,10 +71,16 @@ VMachine* vm_machine(FILE* stream) {
     m = malloc(sizeof(VMachine));
 
     m->memory = vm_ram_init();
-    m->cursors = stack_init(10);
+    m->threads = malloc(sizeof(ll));
+
+
+    ll *t = malloc(sizeof(ll));
+    m->threads->next = t;
+    t->next = m->threads;
+    t->data = -1;
 
     m->lines = 0;
-    stack_push(m->cursors, 0);
+    m->threadcount = 1;
 
     data = malloc(sizeof(VMLine) * data_size);
 
@@ -120,7 +134,24 @@ VMachine* vm_machine(FILE* stream) {
     return m;
 }
 
-VMachine* vm_machine_eval(VMachine* m, int line) {
+void vm_machine_thread_del(VMachine *m, int id) {
+    ll *c, *t;
+    VMThread *y;
+    t = m->threads;
+    c = t->next;
+    y = (VMThread*) c->data;
+    while((c != m->threads) && (c->next) && (y->id != id)) {
+        t = c;
+        c = c->next;
+        y = (VMThread*) c->data;
+    }
+    if(c->data == id) {
+        t->next = c->next;
+        free(c);
+    }
+}
+
+int vm_machine_eval(VMachine* m, int line) {
     if((line < 0) || (line > m->lines)) {
         // out of line buffer error state
         m->errcode = 1;
@@ -406,13 +437,17 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
             case 2163906:
                 // FORK N1
                 // creates a new "thread" (really a cursor) on line N1
-                stack_push(m->cursors, m->code[line].code[1]);
+                ll_insert(m->threads, vm_thread(m->code[line].code[1], m->threadcount+1, 1));
+                vm_ram_assign_static(m->memory,m->code[line].code[2],(m->threadcount++)+1);
                 break;
 
             case 2282794:
-                // JOIN
-                // kills the existing "thread" (really a cursor)
-                return m; // I die, remember?
+                // JOIN N1
+                // kills the thread with the ID at register N1
+                vm_machine_thread_del(m,
+                                      vm_ram_get(m->memory,
+                                                 m->code[line].code[1]));
+                break;
 
             case 2402146:
                 // NOOP
@@ -434,38 +469,27 @@ VMachine* vm_machine_eval(VMachine* m, int line) {
                 break;
         }
 
-        incriment:
-            line += 1;
-
         finally:
-            stack_push(m->cursors, line);
-            return m;
+        return line+1;
     }
 }
 
 void vm_machine_run(VMachine* m) {
-    int l;
+    int i;
+    VMThread* t;
+    ll* cursor;
+    cursor = m->threads;
     while(1) {
-        stack* s = m->cursors;
-        m->cursors = stack_init(10);
-
-        while((!stack_empty(s)) &&
-              (m->errcode == 0)    ) {
-
-            l = stack_pop(s);
-
-            m = vm_machine_eval(m, l);
-            if(m->errcode == 0) {
-                // all is well..
-                continue;
-            } else {
-                // deal with error code... how?
-                printf("[ERROR ON LINE %i] %s", l, m->errmsg);
-                exit(1); // die!
-            }
+        t = (VMThread*) cursor->data;
+        i = vm_machine_eval(m, t->line);
+        if((cursor->data) && (i >= 0) && (m->errcode == 0)) {
+            t->line = i;
+            cursor = cursor->next;
+        } else {
+            // deal with error code... how?
+            printf("[ERROR ON LINE %i] %s", t->line, m->errmsg);
+            exit(1); // die!
         }
-
-        free(s);
     }
 }
 
