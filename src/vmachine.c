@@ -73,11 +73,13 @@ VMachine* vm_machine(FILE* stream) {
     m->memory = vm_ram_init();
     m->threads = malloc(sizeof(ll));
 
+    m->threads->next = m->threads;
+    m->threads->data = malloc(sizeof(VMThread));
 
-    ll *t = malloc(sizeof(ll));
-    m->threads->next = t;
-    t->next = m->threads;
-    t->data = -1;
+    VMThread* t = m->threads->data;
+    t->line = 0;
+    t->id = 1;
+    t->prio = 1;
 
     m->lines = 0;
     m->threadcount = 1;
@@ -361,12 +363,12 @@ int vm_machine_eval(VMachine* m, int line) {
             case 68006735:
                 // GOTOR N1 (go to line number in register)
                 line = vm_ram_get(m->memory, m->code[line].code[1]);
-                goto finally;
+                return line;
 
             case 68006729:
                 // GOTOL N1 (go to absolute line number (indexed from 0))
                 line = m->code[line].code[1];
-                goto finally;
+                return line;
 
             case 2333:
                 // IF N1
@@ -375,7 +377,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 } else {
                     line += 2;
                 }
-                goto finally;
+                return line;
 
             case 2558355:
                 // SWAP N1 N2
@@ -481,6 +483,8 @@ void vm_machine_run(VMachine* m) {
     cursor = m->threads;
     while(1) {
         t = (VMThread*) cursor->data;
+        if(!t) exit(1);
+        //printf("[EVAL THREAD %i] ", t->id);
         i = vm_machine_eval(m, t->line);
         if((cursor->data) && (i >= 0) && (m->errcode == 0)) {
             t->line = i;
