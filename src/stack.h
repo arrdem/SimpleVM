@@ -7,20 +7,22 @@
  *      qick-hack stack of integers.
  */
 
-#ifndef STACK_H_INCLUDED
-#define STACK_H_INCLUDED
+#include "vmtypes.h"
+
+#ifndef _STACK_H_
+#define _STACK_H_
 
 typedef struct {
     int depth;
     int used;
-    int *stack;
+    void **stack;
 } stack;
 
 stack* stack_init(int);
-void stack_push(stack*, int);
-int stack_pop(stack*);
-int stack_peep(stack*);
+void stack_push(stack*, void*);
+void* stack_pop(stack*);
+void* stack_peep(stack*);
 int  stack_depth(stack*);
 int  stack_empty(stack*);
 
-#endif // STACK_H_INCLUDED
+#endif // _STACK_H_
