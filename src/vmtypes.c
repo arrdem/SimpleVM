@@ -1,17 +1,16 @@
-/*      vmtypes.c
+/*      vmtypes.h
  *      Copyright 2011 Reid McKenzie <rmckenzie92@gmail.com>
  *      This code and all other code in the project may be used
  *      or re-used for any purpose at all, so long as I am
  *      made aware of my contribution.
  *
- *      may be un-needed, but it lays out all the typedefs and
- *      structs used in this project just in case.
+ *      lays out all the types and structs nicely for GCC
  */
 
-#include "stack.h"
+#include "linklist.h"
 
-#ifndef _VMBLOCK_H_
-#define _VMBLOCK_H_
+#ifndef _VMTYPES_H_
+#define _VMTYPES_H_
 
 typedef struct {
     int*     ptr;
@@ -32,13 +31,21 @@ typedef struct {
 } VMLine;
 
 typedef struct {
+    int      line;
+    int      id;
+    int      prio;
+} VMThread;
+
+typedef struct {
+    // stuff from 1.0 for the machine
     VMRam*              memory;
     VMLine*             code;
     int                 lines;
-    stack*              cursors;
+    ll*                 threads;
     char*               errmsg;
     int                 errcode;
 } VMachine;
+
 #define VMBlockSize sizeof(VMBlock);
 
 #endif
