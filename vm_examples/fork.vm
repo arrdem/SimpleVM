@@ -1,13 +1,13 @@
 let 0 10
 let 1 0
 let 2 50
-fork 10
-fork 16
+fork 10 3
+fork 16 4
 noop
 decr 2
 if 2
 gotol 6
-halt 0
+halt 10
 noop
 incr 0
 puti 0
