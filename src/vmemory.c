@@ -1,3 +1,12 @@
+/*      vmemory.c
+ *      Copyright 2011 Reid McKenzie <rmckenzie92@gmail.com>
+ *      This code and all other code in the project may be used
+ *      or re-used for any purpose at all, so long as I am
+ *      made aware of my contribution.
+ *
+ *      impliments the VM's memory system
+ */
+
 #ifndef _VMEMORY_C_
 #define _VMEMORY_C_
 

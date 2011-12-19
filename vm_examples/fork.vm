@@ -1,0 +1,20 @@
+let 0 10
+let 1 0
+let 2 50
+fork 10
+fork 16
+noop
+decr 2
+if 2
+gotol 6
+halt 0
+noop
+incr 0
+puti 0
+gotol 11
+halt 1
+noop
+incr 1
+puti 1
+gotol 16
+halt 1
