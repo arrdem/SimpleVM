@@ -142,12 +142,12 @@ void vm_machine_thread_del(VMachine *m, int id) {
     t = m->threads;
     c = t->next;
     y = (VMThread*) c->data;
-    while((c != m->threads) && (c->next) && (y->id != id)) {
+    while((y->id != id)&&(c->next)&&(c != m->threads)) {
         t = c;
         c = c->next;
         y = (VMThread*) c->data;
     }
-    if(c->data == id) {
+    if(y->id == id) {
         t->next = c->next;
         free(c);
     }
