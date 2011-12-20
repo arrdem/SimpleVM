@@ -1,11 +1,11 @@
 = Simple VM
-Simple VM is just what it claims to be, a simple ANSI C virtual machine designed
-to emulate an infinite memory register or Turing machine. SimpleVM provides a
-RISC archetecture with builtins such as pointers, integer arithmetic, and
-conditional branching. As of 1.5, SimpleVM also features threading.
+Simple VM is just what it claims to be, a simple virtual machinein pure ANSI C
+designed to emulate an infinite memory register or Turing machine. SimpleVM 
+provides a RISC archetecture with builtins such as pointers, integer arithmetic,
+and conditional branching. As of 1.5, SimpleVM also features threading.
 
 == Current State
-At present, I would say that SimpleVM is in the 1.5 version range as all the
+At present, I would say that SimpleVM is in the 1.6 version range as all the
 basic functionality required for Turing completeness (integer math, branching)
 are in place and work as well as I could hope. Some limited parallelism is now
 featured as well, with the OPCODE language featuring fully functional FORK and
@@ -18,6 +18,16 @@ JOIN operations.
  * Add a call stack for user-defined functions
  * Storage of program instructions in the memory core with program data
  * Add a framebuffer or other pixel display which can be manipulated by programs
+
+== ToDone List
+ * Case-insensitivity
+ * Threading through FORK and JOIN words, exit on 0 running threads
+ * RISC archetecture
+ * Dynamic memory resizing
+ * Integer math
+ * Integer comparisons
+ * Conditional branching
+ * Pointers
 
 == Instruction Set
 REGS[] is the name I use for the machine's RAM registers. C is the name I use
@@ -36,12 +46,14 @@ for the instruction number cursor.
         GETI     | 2184147   | N1        | reads an integer into register N1
         GOTOL    | 68006729  | N1        | C := N1
         GOTOR    | 68006735  | N1        | C := REGS[N1]
+        GT       | 2285      | N1 N2 N3  | REGS[N3] := REGS[N1] > REGS[N2]
         HALT     | 2209857   | N1        | kills entire VM with exit code
         IF       | 2333      | N1        | IF(REGS[N1]){C := C+1} ELSE {C := C+2}
         INCR     | 2251860   | N1        | REGS[N1] := REGS[N1] + 1
         JOIN     | 2282794   | N1        | kills process with an ID at N1, or the current one if REGS[N1] <= 0
         LET      | 75259     | N1 N2     | REGS[N1] := N2
         LSFT     | 2346133   | N1        | REGS[N1] := REGS[N1]<<1
+        LT       | 2440      | N1 N2 N3  | REGS[N3] := REGS[N1] < REGS[N2]
         MCPY     | 2360863   | N1 N2     | REGS[N2] := REGS[N1]
         MOD      | 76514     | N1 N2 N3  | REGS[N3] := REGS[N1] % REGS[N2]
         MUL      | 76708     | N1 N2 N3  | REGS[N3] := REGS[N1] * REGS[N2]
@@ -49,7 +61,7 @@ for the instruction number cursor.
         NOT      | 77491     | N1 N2     | REGS[N2] := !REGS[N1]
         OR       | 2531      | N1 N2 N3  | REGS[N3] := REGS[N1] || REGS[N2]
         PUTC     | 2467636   | N1        | printf("%c", regs[N1]);
-        PUTI     | 2467642   | N1        | printf("%i", regs[N1]);
+        PUTI     | 2467642   | N1        | printf("%i\n", regs[N1]);
         RGET     | 2513316   | N1 N2     | regs[N2] = regs[regs[N1]] (pointer deref)
         RSET     | 2524848   | N1 N2     | regs[regs[N1]] = regs[N2] (pointer write)
         RSFT     | 2524879   | N1        | REGS[N1] := REGS[N1]>>1
