@@ -14,7 +14,6 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include <pthread.h>
 
 #include "vmemory.h"
 #include "vconsts.h"
@@ -159,6 +158,7 @@ int vm_machine_eval(VMachine* m, int line) {
         m->errcode = 1;
         m->errmsg = "CURSOR OUT OF LINE BUFFER";
     } else {
+        srand(time(NULL));
         int i;
         switch(m->code[line].code[0]) {
 
@@ -298,7 +298,7 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2467636:
                 // PUTC N1
-                printf("[PUTC LINE %i] %c\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
+                printf("%c\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
                 break;
 
             case 2184147:
@@ -439,20 +439,43 @@ int vm_machine_eval(VMachine* m, int line) {
             case 2163906:
                 // FORK N1
                 // creates a new "thread" (really a cursor) on line N1
-                ll_insert(m->threads, vm_thread(m->code[line].code[1], m->threadcount+1, 1));
-                vm_ram_assign_static(m->memory,m->code[line].code[2],(m->threadcount++)+1);
+                ll_insert(m->threads,
+                          vm_thread(m->code[line].code[1],
+                                    m->threadcount+1, 1)
+                          );
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[2],
+                                     (m->threadcount++)+1);
+                m->threadcount++;
                 break;
 
             case 2282794:
                 // JOIN N1
                 // kills the thread with the ID at register N1
-                vm_machine_thread_del(m,
-                                      vm_ram_get(m->memory,
-                                                 m->code[line].code[1]));
+                i = vm_ram_get(m->memory,
+                               m->code[line].code[1]);
+
+                m->threadcount--;
+                if(i) vm_machine_thread_del(m,i);
+                else return -1;
                 break;
 
             case 2402146:
                 // NOOP
+                break;
+
+            case 2508635:
+                // RBIT N1 - get a random 1 or 0
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     rand()%2);
+                break;
+
+            case 2515517:
+                // RINT N1 - get a random int, save to N1
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     rand());
                 break;
 
             case 2094719:
@@ -481,7 +504,7 @@ void vm_machine_run(VMachine* m) {
     VMThread* t;
     ll* cursor;
     cursor = m->threads;
-    while(1) {
+    while(m->threadcount) {
         t = (VMThread*) cursor->data;
         if(!t) exit(1);
         //printf("[EVAL THREAD %i] ", t->id);
@@ -489,6 +512,10 @@ void vm_machine_run(VMachine* m) {
         if((cursor->data) && (i >= 0) && (m->errcode == 0)) {
             t->line = i;
             cursor = cursor->next;
+        } else if(i == -1) {
+            // this is the "kill me" code
+            vm_machine_thread_del(m,
+                                  t->id);
         } else {
             // deal with error code... how?
             printf("[ERROR ON LINE %i] %s", t->line, m->errmsg);
