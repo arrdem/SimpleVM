@@ -281,6 +281,37 @@ int vm_machine_eval(VMachine* m, int line) {
                                      ));
                 break;
 
+            case 2285:
+                // GT N1 N2 N3
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[line].code[1]) >
+                                        vm_ram_get(m->memory,
+                                                   m->code[line].code[2])
+                                     ));
+                break;
+
+            case 2440:
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[line].code[1]) <
+                                        vm_ram_get(m->memory,
+                                                   m->code[line].code[2])
+                                     ));
+                break;
+
+            case 66219796:
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[3],
+                                     (vm_ram_get(m->memory,
+                                                   m->code[line].code[1]) ==
+                                        vm_ram_get(m->memory,
+                                                   m->code[line].code[2])
+                                     ));
+                break;
+
             case 68001:
                 // DSP
                 vm_ram_display(m->memory);
