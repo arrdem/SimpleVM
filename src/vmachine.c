@@ -446,6 +446,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 vm_ram_assign_static(m->memory,
                                      m->code[line].code[2],
                                      (m->threadcount++)+1);
+                m->threadcount++;
                 break;
 
             case 2282794:
@@ -454,6 +455,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 i = vm_ram_get(m->memory,
                                m->code[line].code[1]);
 
+                m->threadcount--;
                 if(i) vm_machine_thread_del(m,i);
                 else return -1;
                 break;
@@ -502,7 +504,7 @@ void vm_machine_run(VMachine* m) {
     VMThread* t;
     ll* cursor;
     cursor = m->threads;
-    while(1) {
+    while(m->threadcount) {
         t = (VMThread*) cursor->data;
         if(!t) exit(1);
         //printf("[EVAL THREAD %i] ", t->id);
