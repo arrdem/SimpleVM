@@ -1,4 +1,5 @@
 #include "linklist.h"
+#include <stdlib.h>
 
 #ifndef _LINKLIST_C_
 #define _LINKLIST_C_
@@ -22,7 +23,7 @@ int ll_search(ll* o, void* d) {
     else return -1;
 }
 
-int ll_delete(ll* o, void* d) {
+int ll_c_delete_node(ll* o, void* d) {
     ll *c, *t;
     t = o;
     c = t->next;
@@ -36,6 +37,12 @@ int ll_delete(ll* o, void* d) {
         return 1;
     }
     return -1;
+}
+
+void ll_c_delete(ll* n, ll* s) {
+    free(n->data);
+    if((n->next) && (n->next != s)) ll_c_delete(n->next, s);
+    free(n->next);
 }
 
 #endif

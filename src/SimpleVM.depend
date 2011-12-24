@@ -37,7 +37,7 @@
 	"vio.c"
 	"vconsts.c"
 
-1323964882 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
+1324322751 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
 
 1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vio.c
 	<stdio.h>
@@ -45,7 +45,7 @@
 	<string.h>
 	"vmtypes.h"
 
-1324149116 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
+1324688742 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -53,6 +53,7 @@
 	<ctype.h>
 	"vmemory.h"
 	"vconsts.h"
+	"linklist.h"
 
 1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vmath.c
 	<stdio.h>
@@ -61,17 +62,19 @@
 	"vconsts.h"
 	"vmath.h"
 
-1323999376 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
+1324680755 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
 	<stdio.h>
 	<stdlib.h>
 	"vconsts.h"
 	"vmtypes.h"
 
-1323999366 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+1324322751 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+	"linklist.h"
 
-1323999360 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
+1324679704 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
+	"linklist.h"
 
-1323981329 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
+1324686051 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -80,13 +83,13 @@
 	"vmemory.h"
 	"vconsts.h"
 
-1323210959 /home/reid/Projects/programming/SimpleVM/src/vmemory.h
+1324277970 /home/reid/Projects/programming/SimpleVM/src/vmemory.h
 	<stdio.h>
 	<stdlib.h>
 	"vconsts.h"
 	"vmtypes.h"
 
-1323211089 /home/reid/Projects/programming/SimpleVM/src/vconsts.h
+1324277970 /home/reid/Projects/programming/SimpleVM/src/vconsts.h
 
 1323211089 /home/reid/Projects/programming/SimpleVM/src/vmath.h
 	<stdio.h>
@@ -159,4 +162,16 @@
 	"vmtypes.h"
 
 1323191010 source:/home/reid/Projects/SimpleVM/src/vmtypes.c
+
+1324680896 source:/home/reid/Projects/programming/SimpleVM/src/linklist.c
+	"linklist.h"
+	<stdlib.h>
+
+1324530923 /home/reid/Projects/programming/SimpleVM/src/linklist.h
+
+1324686637 source:/home/reid/Projects/programming/SimpleVM/src/svm.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vmachine.h"
 

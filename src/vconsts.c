@@ -22,12 +22,13 @@ const int
           VMBoolean   = 0xBBBBBBBB,
           VMArray     = 0xCCCCCCCC,
           VMStack     = 0xDDDDDDDD,
+          VMHeaderSize   = 2,
+// VM version ID
+          VMMajorVersion = 1,
+          VMMinorVersion = 7,
 // settings
           MIN_MEM     = 15,
           MIN_SEGS    = 15,
           MEM_PAD     = 2,
-          LN_TOKS     = 6
-
-          ;
-
+          LN_TOKS     = 6;
 #endif

@@ -1,0 +1,25 @@
+= .VMC File Spec
+Just as the VJM uses .class files to define code in a prebuilt and ready to
+roll form, SimpleVM uses the .VMC file extension to save VM bytecode in a
+portable form.
+
+== File Layout
+As with all things, this file type is version-dependant. The following is the
+format as of v1.7 (the introduction of binary code)
+
+    +----------------+----------------+-------------------------------------------+
+    | OFFSET (bytes) | PAYLOAD        |  USE                                      |
+    +----------------+----------------+-------------------------------------------+
+    | +0             | INT            | Major version number                      |
+    | +8             | INT            | Minor version number                      |
+    | +8 + (7*8*n)   | INT[7]         | line N (compiled)                         |
+    | EOF            | XXXXXXXXXXXXXX | XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX |
+    +----------------+----------------+-------------------------------------------+
+
+THe major and minor versions are included so that the VM can detect and warn
+any potential instruction incompatibilities at load time instead of simply
+failing during runtime.
+
+== Future Possibilites
+ * Code checksum
+ * List of used instructions in header

@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Debug" />
-	<File name="main.c" open="1" top="0" tabpos="2">
-		<Cursor position="933" topLine="0" />
+	<ActiveTarget name="Release" />
+	<File name="linklist.c" open="1" top="0" tabpos="8">
+		<Cursor position="827" topLine="0" />
+	</File>
+	<File name="linklist.h" open="1" top="0" tabpos="9">
+		<Cursor position="189" topLine="0" />
 	</File>
 	<File name="vconsts.c" open="0" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="vmachine.c" open="1" top="1" tabpos="1">
-		<Cursor position="6918" topLine="189" />
+	<File name="vmachine.c" open="1" top="0" tabpos="3">
+		<Cursor position="1373" topLine="33" />
 	</File>
 	<File name="vmachine.h" open="0" top="0" tabpos="7">
 		<Cursor position="1183" topLine="11" />
 	</File>
-	<File name="vmemory.c" open="1" top="0" tabpos="6">
-		<Cursor position="1682" topLine="96" />
+	<File name="vmemory.c" open="1" top="0" tabpos="7">
+		<Cursor position="1682" topLine="123" />
 	</File>
-	<File name="vmemory.h" open="1" top="0" tabpos="4">
+	<File name="vmemory.h" open="1" top="0" tabpos="5">
 		<Cursor position="162" topLine="0" />
 	</File>
-	<File name="vmtypes.c" open="1" top="0" tabpos="5">
+	<File name="vmtypes.c" open="1" top="0" tabpos="6">
 		<Cursor position="75" topLine="0" />
 	</File>
-	<File name="vmtypes.h" open="1" top="0" tabpos="3">
-		<Cursor position="62" topLine="0" />
+	<File name="vmtypes.h" open="1" top="0" tabpos="4">
+		<Cursor position="857" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

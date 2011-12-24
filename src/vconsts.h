@@ -22,6 +22,10 @@ const int
           VMBoolean,
           VMArray,
           VMStack,
+          VMHeaderSize,
+// version ID
+          VMMajorVersion,
+          VMMinorVersion,
 // settings
           MIN_MEM,
           MIN_SEGS,

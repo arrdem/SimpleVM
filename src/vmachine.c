@@ -22,31 +22,30 @@
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
 
-int vm_machine_hash(char* str) {
-    // implimentation of the Java string hashing function
-    char* s = &str;
-    int h = 0;
-    while(*s != '\0') {
-        h = 31 * h + (int) *s;
-        s++;
+long vm_machine_string_hash(char* str) {
+    // the Java string hashing function
+    long h = 0;
+    while(*str != '\0') {
+        h = 31 * h + (int) *str;
+        str++;
     }
     return h;
 }
 
 char* vm_machine_upper(char *str) {
     // (destructive?) string uppercase conversion function
-    char* p = &str;
-    while (*p = toupper(*p)) p++;
-    return str;
+    char* f = str;
+    while (*str = toupper(*str)) str++;
+    return f;
 }
 
 void vm_machine_print(VMachine* m) {
     int k = 0, i;
     while(k <= m->lines) {
-        printf("[%5i] %s ", k, &m->code[k].text, m->code[k].code[0]);
+        printf("[%-5i] %5s ", k, m->code[k].text, m->code[k].code[0]);
         i = 0;
         while(i < 7) {
-            printf("%10i ", m->code[k].code[i]);
+            printf("%-10i ", m->code[k].code[i]);
             i++;
         }
         printf("\n");
@@ -54,15 +53,111 @@ void vm_machine_print(VMachine* m) {
     }
 }
 
-VMThread* vm_thread(int line, int id, int prio) {
+void vm_machine_delete(VMachine* m) {
+    int i = 0;
+    while(i < m->lines) {
+        free(m->code[i].text);
+        free(m->code[i++].code);
+    }
+    free(m->code);
+    free(m);
+}
+
+VMThread* vm_thread(int line, int id) {
     VMThread *t = malloc(sizeof(VMThread));
     t->id = id;
-    t->prio = prio;
     t->line = line;
     return t;
 }
 
-VMachine* vm_machine(FILE* stream) {
+VMachine* vm_machine_binary(FILE* stream) {
+    int data_size = 2, data_used = 0, i = 0;
+    int header[VMHeaderSize];
+    long fsize;
+    VMachine* m;
+    VMLine *data;
+
+    m = malloc(sizeof(VMachine));
+
+    m->memory = vm_ram_init();
+    m->threads = malloc(sizeof(ll));
+
+    m->threads->next = m->threads;
+    m->threads->data = malloc(sizeof(VMThread));
+
+    VMThread* t = m->threads->data;
+    t->line = 0;
+    t->id = 1;
+
+    m->lines = 0;
+    m->threadcount = 1;
+
+    data = malloc(sizeof(VMLine) * data_size);
+
+    fseek(stream, 0L, SEEK_END);
+    fsize = ftell(stream);
+    rewind(stream);
+
+    fread(header, sizeof(int), VMHeaderSize, stream);
+
+    if((header[0] != VMMajorVersion) ||
+       (header[1] != VMMinorVersion))  {
+        printf("[INIT] WARNING - BYTECODE WAS BUILT FOR A DIFFERENT VERSION\n");
+        printf("          VM VERSION %i.%i\n", VMMajorVersion, VMMinorVersion);
+        printf("      TARGET VERSION %i.%i\n", header[0], header[1]);
+        printf("      ATTEMPTING TO CONTINUE... RESULTS NOT GUARANTEED\n");
+    } else if(((fsize - VMHeaderSize*sizeof(int)) %
+               (7*sizeof(int))) != 0) {
+        printf("[INIT] WARNING - BYTECODE HAS A STRANGE SIZE\n");
+        printf("      SIZE:%i\n", fsize);
+        printf(" INT COUNT:%i\n", (fsize - VMHeaderSize*sizeof(int)/sizeof(int)));
+    }
+
+    while(1) {
+        if(data_size == data_used) {
+            // grow VMLinebuffer
+            VMLine* tmpVMLines = malloc(sizeof(VMLine) * 2 * data_size);
+            memset(tmpVMLines, 0, sizeof(VMLine) * 2 * data_size);
+            int q = 0;
+            while(q < data_used) {
+                tmpVMLines[q] = data[q++];
+            }
+            free(data);
+            data = tmpVMLines;
+            data_size *= 2;
+        }
+
+        data[data_used].code = malloc(sizeof(int)  * 7);
+        data[data_used].text = malloc(sizeof(char) * 4);
+        strcpy(data[data_used].text, "---\0");
+
+        i = fread(data[data_used].code, sizeof(int), 7, stream);
+        /*printf("%i %i %i %i %i %i %i\n",
+               data[data_used].code[0],
+               data[data_used].code[1],
+               data[data_used].code[2],
+               data[data_used].code[3],
+               data[data_used].code[4],
+               data[data_used].code[5],
+               data[data_used].code[6]);*/
+
+        if(i > 0) {
+            data_used++;
+            continue; // not there yet....
+        } else {
+            // clean up the mess
+            memset(data[data_used].code, 0, 7);
+            break; // and quit
+        }
+    }
+
+    m->lines = data_used;
+    m->code = data;
+
+    return m;
+}
+
+VMachine* vm_machine_ascii(FILE* stream) {
     int data_size = 2, data_used = 0, i = 0, f, k;
     VMachine* m;
     VMLine *data;
@@ -78,7 +173,6 @@ VMachine* vm_machine(FILE* stream) {
     VMThread* t = m->threads->data;
     t->line = 0;
     t->id = 1;
-    t->prio = 1;
 
     m->lines = 0;
     m->threadcount = 1;
@@ -102,13 +196,13 @@ VMachine* vm_machine(FILE* stream) {
         data[data_used].code = malloc(7 * sizeof(int));
 
         data[data_used].text = malloc(sizeof(char)*10);
-        f = fscanf(stream, "%s", &data[data_used].text);
+        f = fscanf(stream, "%s", data[data_used].text);
         if(f == EOF) {
             memset(data[data_used].text, 0, sizeof(char) * 10);
             goto die;
         } else {
             data[data_used].text = vm_machine_upper(data[data_used].text);
-            data[data_used].code[0] = vm_machine_hash(data[data_used].text);
+            data[data_used].code[0] = vm_machine_string_hash(data[data_used].text);
         }
 
         k = 1;
@@ -413,9 +507,15 @@ int vm_machine_eval(VMachine* m, int line) {
             case 2558355:
                 // SWAP N1 N2
                 // XOR the pointers!
-                *m->memory->regs[m->code[line].code[1]].ptr ^= *m->memory->regs[m->code[line].code[2]].ptr;
-                *m->memory->regs[m->code[line].code[2]].ptr ^= *m->memory->regs[m->code[line].code[1]].ptr;
-                *m->memory->regs[m->code[line].code[1]].ptr ^= *m->memory->regs[m->code[line].code[2]].ptr;
+                i = vm_ram_get(m->memory, m->code[line].code[1]);
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     vm_ram_get(m->memory,
+                                                m->code[line].code[2]));
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     i);
+
                 break;
 
             case 2251860:
@@ -472,7 +572,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 // creates a new "thread" (really a cursor) on line N1
                 ll_insert(m->threads,
                           vm_thread(m->code[line].code[1],
-                                    m->threadcount+1, 1)
+                                    m->threadcount+1)
                           );
                 vm_ram_assign_static(m->memory,
                                      m->code[line].code[2],

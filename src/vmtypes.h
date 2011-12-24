@@ -13,9 +13,8 @@
 #define _VMBLOCK_H_
 
 typedef struct {
-    int*     ptr;
+    int      ptr;
     int      type;
-    int      addr;
     int      used;
 } VMBlock;
 
@@ -33,20 +32,19 @@ typedef struct {
 typedef struct {
     int      line;
     int      id;
-    int      prio;
 } VMThread;
 
 typedef struct {
     // stuff from 1.0 for the machine
-    VMRam*              memory;
-    VMLine*             code;
-    int                 lines;
+    VMRam*   memory;
+    VMLine*  code;
+    int      lines;
 
-    ll*                 threads;
-    int                 threadcount;
+    ll*      threads;
+    int      threadcount;
 
-    char*               errmsg;
-    int                 errcode;
+    char*    errmsg;
+    int      errcode;
 } VMachine;
 
 #define VMBlockSize sizeof(VMBlock);
