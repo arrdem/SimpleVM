@@ -2,17 +2,17 @@
 Simple VM is just what it claims to be, a simple virtual machinein pure ANSI C
 designed to emulate an infinite memory register or Turing machine. SimpleVM 
 provides a RISC archetecture with builtins such as pointers, integer arithmetic,
-and conditional branching. As of 1.5, SimpleVM also features threading.
+and conditional branching.
 
 == Current State
-At present, I would say that SimpleVM is in the 1.6 version range as all the
+At present, I would say that SimpleVM is in the 1.7 version range as all the
 basic functionality required for Turing completeness (integer math, branching)
 are in place and work as well as I could hope. Some limited parallelism is now
 featured as well, with the OPCODE language featuring fully functional FORK and
-JOIN operations.
+JOIN operations. 1.7 added a simple binary file format for storing and
+transferring VM code somewhat like Pascal's P-code of Java's .class files.
 
 == ToDo List
- * Support for a PASCAL P-CODE like compiled binary file
  * Support for user-defined named verbs
  * Private memory space for such functions seperate from the program core
  * Add a call stack for user-defined functions
@@ -20,6 +20,7 @@ JOIN operations.
  * Add a framebuffer or other pixel display which can be manipulated by programs
 
 == ToDone List
+ * Support for a PASCAL P-CODE like compiled binary file
  * Case-insensitivity
  * Threading through FORK and JOIN words, exit on 0 running threads
  * RISC archetecture
