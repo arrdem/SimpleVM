@@ -21,28 +21,20 @@ void vm_ram_display(VMRam* ram) {
     VMBlock b;
     while(i < ram->size) {
         b = ram->regs[i];
-        if(b.ptr != NULL) {
-            printf("[%i] <used:%i type:%X data:%X, %i>\n", i, b.used, b.type, *b.ptr, *b.ptr);
-        } else {
-            printf("[%i] <used:%i type:%X data:NULL, NULL>\n", i, b.used);
-        }
-        i++;
+        printf("[%i] <used:%i type:%X data:%X, %i>\n", i++, b.used, b.type, b.ptr, b.ptr);
     }
 }
 
 int vm_ram_get(VMRam* ram, int addr) {
     if((ram->size >= addr) && ram->regs[addr].used) {
-        return *ram->regs[addr].ptr;
+        return ram->regs[addr].ptr;
     } else return 0;
 }
 
 void vm_ram_free(VMRam* ram, int i, int j) {
-    if((j)&&(ram->regs[i].ptr != NULL)) {
-        free(ram->regs[i].ptr);
-    }
     ram->regs[i].used = VMFalse;
     ram->regs[i].type = VMNull;
-    ram->regs[i].ptr = &VMNull;
+    ram->regs[i].ptr =  VMNull;
 }
 
 void vm_ram_grow(VMRam *ram) {
@@ -62,18 +54,14 @@ VMBlock * vm_ram_malloc_dynamic(VMRam* ram) {
         vm_ram_grow(ram);
     }
     ram->regs[ram->used].used = 1;
-    ram->regs[ram->used].addr = ram->used;
     return &ram->regs[ram->used++];
 }
 
 VMBlock * vm_ram_malloc_static(VMRam* ram, int index) {
     //printf("[STATIC] ALLOCATING.....\n");
     while(index > ram->size) vm_ram_grow(ram);
-
-    if(ram->regs[index].used) free(ram->regs[index].ptr);
-    ram->regs[index].ptr = malloc(sizeof(int));
+    ram->regs[index].ptr = 0;
     ram->regs[index].used = 1;
-    ram->regs[index].addr = index;
 
     ram->used = index;
 
@@ -105,7 +93,6 @@ void vm_ram_compact(VMRam* ram) {
         if(ram->regs[j].used == 1) {
             ram->regs[i].ptr = ram->regs[j].ptr;
             ram->regs[i].used = 1;
-            ram->regs[i].addr = i;
             ram->regs[i].type = ram->regs[j].type;
             vm_ram_free(ram, j, 0);
             i++;
@@ -128,7 +115,6 @@ void vm_ram_rst(VMRam *ram) {
 
     int i = ram->size;
     while(i >= 0) {
-        ram->regs[i].addr = i;
         ram->regs[i].ptr  = &VMNull;
         ram->regs[i].type = VMNull;
         ram->regs[i].used = VMFalse;
@@ -139,8 +125,8 @@ void vm_ram_rst(VMRam *ram) {
 void vm_ram_assign_static(VMRam *ram, int index, int value) {
     //printf("[STATIC] ASSIGNING.... \n");
     while(ram->size < index) vm_ram_grow(ram);
-    if(!ram->regs[index].used) ram->regs[index].ptr = malloc(sizeof(int));
-    *ram->regs[index].ptr = value;
+    if(!ram->regs[index].used) ram->regs[index].ptr = 0;
+    ram->regs[index].ptr = value;
     ram->regs[index].used = 1;
     ram->regs[index].type = VMInteger;
 }
@@ -149,20 +135,14 @@ void vm_ram_assign_dynamic(VMRam *ram, int value) {
     ram->used++;
 
     if(ram->used > ram->size - MEM_PAD) {
-        if(ram->regs[ram->used].used) {
-            free(ram->regs[ram->used].ptr);
-        }
-
-        ram->regs[ram->used].ptr = malloc(sizeof(int));
-        *ram->regs[ram->used].ptr = value;
+        ram->regs[ram->used].ptr = value;
         ram->regs[ram->used].used = 1;
         ram->regs[ram->used].type = VMInteger;
 
     } else {
         printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
         VMBlock * a = vm_ram_malloc_dynamic(ram);
-        a->ptr = malloc(sizeof(int));
-        *a->ptr = value;
+        a->ptr = value;
         a->used = 1;
         a->type = VMInteger;
     }
