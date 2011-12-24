@@ -1,5 +1,5 @@
 = Simple VM
-Simple VM is just what it claims to be, a simple virtual machinein pure ANSI C
+Simple VM is just what it claims to be, a simple virtual machine in pure ANSI C
 designed to emulate an infinite memory register or Turing machine. SimpleVM 
 provides a RISC archetecture with builtins such as pointers, integer arithmetic,
 and conditional branching.
@@ -20,18 +20,18 @@ transferring VM code somewhat like Pascal's P-code of Java's .class files.
  * Add a framebuffer or other pixel display which can be manipulated by programs
 
 == ToDone List
- * Support for a PASCAL P-CODE like compiled binary file
- * Case-insensitivity
- * Threading through FORK and JOIN words, exit on 0 running threads
- * RISC archetecture
- * Dynamic memory resizing
- * Integer math
- * Integer comparisons
- * Conditional branching
- * Pointers
+ * Support for a PASCAL P-CODE like compiled binary file            (v 1.7)
+ * Threading through FORK and JOIN words, exit on 0 running threads (v 1.6)
+ * Pointers                                                         (v 1.5) 
+ * Integer comparisons                                              (v 1.5)
+ * Conditional branching                                            (v 1.2)
+ * Integer math                                                     (v 1.2)
+ * Case-insensitivity                                               (v 1.0)
+ * Dynamic memory resizing                                          (v 1.0)
+ * RISC archetecture                                                (v 1.0)
 
 == Instruction Set
-REGS[] is the name I use for the machine's RAM registers. C is the name I use
+REGS[ ] is the name I use for the machine's RAM registers. C is the name I use
 for the instruction number cursor.
 
       OPCODE     | HASH      | ARGUMENTS | OPERATION
@@ -72,11 +72,10 @@ for the instruction number cursor.
         XOR      | 87099     | N1 N2 N3  | REGS[N3] :=(REGS[N1] & !REGS[N2]) || (!REGS[N1] & REGS[N2])
 
 == Disclaimer
-This program was hacked together in eight weeks by a college freshman
-who hadn't touched C before in his life. If you use this code for
-anything important, you are nuts to put it kindly.
-
-All code in this project is copyright 2011 Reid McKenzie <rmckenzie92 AT gmail.com>
-This code and all other code in the project may be used or re-used for any 
-purpose at all, so long as I am made aware of my contribution.
+This program was hacked together by a college freshman who hadn't touched C 
+before in his life. If you use this code for anything important, you are nuts 
+to put it kindly. That said, all code in this project is copyright 2011 
+Reid McKenzie <rmckenzie92 AT gmail.com>. This code and all other code in the 
+project may be used or re-used for any purpose at all, so long as I am made 
+aware of my contribution.
 
