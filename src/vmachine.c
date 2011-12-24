@@ -23,21 +23,20 @@
 #define _VMACHINE_C_
 
 int vm_machine_hash(char* str) {
-    // implimentation of the Java string hashing function
-    char* s = &str;
+    // the Java string hashing function
     int h = 0;
-    while(*s != '\0') {
-        h = 31 * h + (int) *s;
-        s++;
+    while(*str != '\0') {
+        h = 31 * h + (int) *str;
+        str++;
     }
     return h;
 }
 
 char* vm_machine_upper(char *str) {
     // (destructive?) string uppercase conversion function
-    char* p = &str;
-    while (*p = toupper(*p)) p++;
-    return str;
+    char* f = str;
+    while (*str = toupper(*str)) str++;
+    return f;
 }
 
 void vm_machine_print(VMachine* m) {
@@ -180,7 +179,7 @@ VMachine* vm_machine_ascii(FILE* stream) {
         data[data_used].code = malloc(7 * sizeof(int));
 
         data[data_used].text = malloc(sizeof(char)*10);
-        f = fscanf(stream, "%s", &data[data_used].text);
+        f = fscanf(stream, "%s", data[data_used].text);
         if(f == EOF) {
             memset(data[data_used].text, 0, sizeof(char) * 10);
             goto die;
