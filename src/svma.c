@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
     int i = 0;
     FILE *in, *out;
     VMachine* turing;
+    char* of = "a.vmc";
 
     if(argc < 2) {
         printf("%s", USAGE);
@@ -45,7 +46,12 @@ int main(int argc, char **argv) {
             turing = vm_machine_ascii(in);
             vm_machine_print(turing);
 
-            out = fopen(argv[2], "w");
+            if(argc > 2) of = &argv[2];
+
+            out = fopen(of, "w");
+
+            fwrite(&VMMajorVersion, 1, sizeof(int), out);
+            fwrite(&VMMinorVersion, 1, sizeof(int), out);
 
             while(i <= turing->lines) {
                 fwrite(turing->code[i].code, 1, 7*sizeof(int), out);
