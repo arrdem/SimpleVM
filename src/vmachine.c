@@ -22,9 +22,9 @@
 #ifndef _VMACHINE_C_
 #define _VMACHINE_C_
 
-int vm_machine_hash(char* str) {
+long vm_machine_string_hash(char* str) {
     // the Java string hashing function
-    int h = 0;
+    long h = 0;
     while(*str != '\0') {
         h = 31 * h + (int) *str;
         str++;
@@ -42,10 +42,10 @@ char* vm_machine_upper(char *str) {
 void vm_machine_print(VMachine* m) {
     int k = 0, i;
     while(k <= m->lines) {
-        printf("[%5i] %5s ", k, m->code[k].text, m->code[k].code[0]);
+        printf("[%-5i] %5s ", k, m->code[k].text, m->code[k].code[0]);
         i = 0;
         while(i < 7) {
-            printf("%10i ", m->code[k].code[i]);
+            printf("%-10i ", m->code[k].code[i]);
             i++;
         }
         printf("\n");
@@ -72,6 +72,7 @@ VMThread* vm_thread(int line, int id) {
 
 VMachine* vm_machine_binary(FILE* stream) {
     int data_size = 2, data_used = 0, i = 0;
+    int header[VMHeaderSize];
     long fsize;
     VMachine* m;
     VMLine *data;
@@ -93,8 +94,24 @@ VMachine* vm_machine_binary(FILE* stream) {
 
     data = malloc(sizeof(VMLine) * data_size);
 
+    fseek(stream, 0L, SEEK_END);
     fsize = ftell(stream);
     rewind(stream);
+
+    fread(header, sizeof(int), VMHeaderSize, stream);
+
+    if((header[0] != VMMajorVersion) ||
+       (header[1] != VMMinorVersion))  {
+        printf("[INIT] WARNING - BYTECODE WAS BUILT FOR A DIFFERENT VERSION\n");
+        printf("          VM VERSION %i.%i\n", VMMajorVersion, VMMinorVersion);
+        printf("      TARGET VERSION %i.%i\n", header[0], header[1]);
+        printf("      ATTEMPTING TO CONTINUE... RESULTS NOT GUARANTEED\n");
+    } else if(((fsize - VMHeaderSize*sizeof(int)) %
+               (7*sizeof(int))) != 0) {
+        printf("[INIT] WARNING - BYTECODE HAS A STRANGE SIZE\n");
+        printf("      SIZE:%i\n", fsize);
+        printf(" INT COUNT:%i\n", (fsize - VMHeaderSize*sizeof(int)/sizeof(int)));
+    }
 
     while(1) {
         if(data_size == data_used) {
@@ -115,14 +132,14 @@ VMachine* vm_machine_binary(FILE* stream) {
         strcpy(data[data_used].text, "---\0");
 
         i = fread(data[data_used].code, sizeof(int), 7, stream);
-        printf("%i %i %i %i %i %i %i\n",
+        /*printf("%i %i %i %i %i %i %i\n",
                data[data_used].code[0],
                data[data_used].code[1],
                data[data_used].code[2],
                data[data_used].code[3],
                data[data_used].code[4],
                data[data_used].code[5],
-               data[data_used].code[6]);
+               data[data_used].code[6]);*/
 
         if(i > 0) {
             data_used++;
@@ -185,7 +202,7 @@ VMachine* vm_machine_ascii(FILE* stream) {
             goto die;
         } else {
             data[data_used].text = vm_machine_upper(data[data_used].text);
-            data[data_used].code[0] = vm_machine_hash(data[data_used].text);
+            data[data_used].code[0] = vm_machine_string_hash(data[data_used].text);
         }
 
         k = 1;
