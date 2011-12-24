@@ -21,7 +21,7 @@ void vm_ram_display(VMRam* ram) {
     VMBlock b;
     while(i < ram->size) {
         b = ram->regs[i];
-        printf("[%i] <used:%i type:%X data:%X, %i>\n", i++, b.used, b.type, b.ptr, b.ptr);
+        printf("[%-5i] used:%-5i type:%-8X data:%-8X %-10i\n", i++, b.used, b.type, b.ptr, b.ptr);
     }
 }
 
