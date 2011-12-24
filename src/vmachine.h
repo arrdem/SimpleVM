@@ -20,7 +20,8 @@
 
 int vm_machine_hash(char*);
 void vm_machine_print(VMachine*);
-VMachine* vm_machine(FILE*);
+VMachine* vm_machine_ascii(FILE*);
+VMachine* vm_machine_binary(FILE*);
 void vm_machine_eval(VMachine*);
 void vm_machine_run(VMachine*);
 

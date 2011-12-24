@@ -43,7 +43,7 @@ char* vm_machine_upper(char *str) {
 void vm_machine_print(VMachine* m) {
     int k = 0, i;
     while(k <= m->lines) {
-        printf("[%5i] %s ", k, &m->code[k].text, m->code[k].code[0]);
+        printf("[%5i] %5s ", k, m->code[k].text, m->code[k].code[0]);
         i = 0;
         while(i < 7) {
             printf("%10i ", m->code[k].code[i]);
@@ -54,15 +54,94 @@ void vm_machine_print(VMachine* m) {
     }
 }
 
-VMThread* vm_thread(int line, int id, int prio) {
+void vm_machine_delete(VMachine* m) {
+    int i = 0;
+    while(i < m->lines) {
+        free(m->code[i].text);
+        free(m->code[i++].code);
+    }
+    free(m->code);
+    free(m);
+}
+
+VMThread* vm_thread(int line, int id) {
     VMThread *t = malloc(sizeof(VMThread));
     t->id = id;
-    t->prio = prio;
     t->line = line;
     return t;
 }
 
-VMachine* vm_machine(FILE* stream) {
+VMachine* vm_machine_binary(FILE* stream) {
+    int data_size = 2, data_used = 0, i = 0;
+    long fsize;
+    VMachine* m;
+    VMLine *data;
+
+    m = malloc(sizeof(VMachine));
+
+    m->memory = vm_ram_init();
+    m->threads = malloc(sizeof(ll));
+
+    m->threads->next = m->threads;
+    m->threads->data = malloc(sizeof(VMThread));
+
+    VMThread* t = m->threads->data;
+    t->line = 0;
+    t->id = 1;
+
+    m->lines = 0;
+    m->threadcount = 1;
+
+    data = malloc(sizeof(VMLine) * data_size);
+
+    fsize = ftell(stream);
+    rewind(stream);
+
+    while(1) {
+        if(data_size == data_used) {
+            // grow VMLinebuffer
+            VMLine* tmpVMLines = malloc(sizeof(VMLine) * 2 * data_size);
+            memset(tmpVMLines, 0, sizeof(VMLine) * 2 * data_size);
+            int q = 0;
+            while(q < data_used) {
+                tmpVMLines[q] = data[q++];
+            }
+            free(data);
+            data = tmpVMLines;
+            data_size *= 2;
+        }
+
+        data[data_used].code = malloc(sizeof(int)  * 7);
+        data[data_used].text = malloc(sizeof(char) * 4);
+        strcpy(data[data_used].text, "---\0");
+
+        i = fread(data[data_used].code, sizeof(int), 7, stream);
+        printf("%i %i %i %i %i %i %i\n",
+               data[data_used].code[0],
+               data[data_used].code[1],
+               data[data_used].code[2],
+               data[data_used].code[3],
+               data[data_used].code[4],
+               data[data_used].code[5],
+               data[data_used].code[6]);
+
+        if(i > 0) {
+            data_used++;
+            continue; // not there yet....
+        } else {
+            // clean up the mess
+            memset(data[data_used].code, 0, 7);
+            break; // and quit
+        }
+    }
+
+    m->lines = data_used;
+    m->code = data;
+
+    return m;
+}
+
+VMachine* vm_machine_ascii(FILE* stream) {
     int data_size = 2, data_used = 0, i = 0, f, k;
     VMachine* m;
     VMLine *data;
@@ -78,7 +157,6 @@ VMachine* vm_machine(FILE* stream) {
     VMThread* t = m->threads->data;
     t->line = 0;
     t->id = 1;
-    t->prio = 1;
 
     m->lines = 0;
     m->threadcount = 1;
@@ -413,9 +491,15 @@ int vm_machine_eval(VMachine* m, int line) {
             case 2558355:
                 // SWAP N1 N2
                 // XOR the pointers!
-                *m->memory->regs[m->code[line].code[1]].ptr ^= *m->memory->regs[m->code[line].code[2]].ptr;
-                *m->memory->regs[m->code[line].code[2]].ptr ^= *m->memory->regs[m->code[line].code[1]].ptr;
-                *m->memory->regs[m->code[line].code[1]].ptr ^= *m->memory->regs[m->code[line].code[2]].ptr;
+                i = vm_ram_get(m->memory, m->code[line].code[1]);
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     vm_ram_get(m->memory,
+                                                m->code[line].code[2]));
+                vm_ram_assign_static(m->memory,
+                                     m->code[line].code[1],
+                                     i);
+
                 break;
 
             case 2251860:
@@ -472,7 +556,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 // creates a new "thread" (really a cursor) on line N1
                 ll_insert(m->threads,
                           vm_thread(m->code[line].code[1],
-                                    m->threadcount+1, 1)
+                                    m->threadcount+1)
                           );
                 vm_ram_assign_static(m->memory,
                                      m->code[line].code[2],
