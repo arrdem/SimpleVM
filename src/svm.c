@@ -14,28 +14,22 @@
 #include "vmtypes.h"
 #include "vmachine.h"
 
+char **USAGE = "Usage: svm [<pcode file>] [options]\nsee man svm for options list";
+
 int main(int argc, char **argv) {
-    /* ToDo List
-     * - max register size
-     * - initial register
-     * - thread pool cap
-     * - binary code
-     * - text code
-     * - type detect
-     * - input file
-     *
-     *
-    */
-
     VMachine* turing;
-    if(argc < 2) turing = vm_machine_ascii(stdin);
-    else         turing = vm_machine_binary(fopen(argv[1], "r"));
+    if(argc == 1){
+        printf("INTERACTIVE MODE....\n");
+        turing = vm_machine_ascii(stdin);
 
-    printf("TRYING TO PRINT MACHINE...\n");
+        printf("TRYING TO PRINT MACHINE...\n");
+        vm_machine_print(turing);
 
-    vm_machine_print(turing);
-
-    printf("EVALUATING.....\n");
+        printf("EVALUATING.....\n");
+    } else {
+        printf(".VMC MODE....\n");
+        turing = vm_machine_binary(fopen(argv[1], "r"));
+    }
 
     vm_machine_run(turing);
 
