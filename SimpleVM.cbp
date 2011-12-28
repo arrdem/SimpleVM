@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SimpleVM" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/SVM" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="P builder">
+				<Option output="bin/Release/SVMA" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-g" />
+		</Compiler>
+		<Unit filename="linklist.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="linklist.h" />
+		<Unit filename="svm.c">
+			<Option compilerVar="CC" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="svma.c">
+			<Option compilerVar="CC" />
+			<Option target="P builder" />
+		</Unit>
+		<Unit filename="vconsts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vconsts.h" />
+		<Unit filename="vmachine.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vmachine.h" />
+		<Unit filename="vmemory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vmemory.h" />
+		<Unit filename="vmtypes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vmtypes.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,7 @@
+*.o
+*.exe
+*.*~
+*.tmp
+*.log
+SimpleVM *
+*.out
