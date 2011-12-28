@@ -1,0 +1,177 @@
+# depslib dependency file v1.0
+1323930556 source:/home/reid/Projects/programming/SimpleVM/src/main.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vmachine.h"
+
+1323077253 /home/reid/Projects/programming/SimpleVM/src/vmath.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+	"vmath.h"
+
+1322690318 /home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+
+1322690342 /home/reid/Projects/programming/SimpleVM/src/vconsts.c
+
+1322688316 /home/reid/Projects/programming/SimpleVM/src/vmemory.c
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.c"
+	"vmtypes.c"
+
+1322084925 /home/reid/Projects/programming/SimpleVM/src/vio.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"vmtypes.c"
+
+1322689838 /home/reid/Projects/programming/SimpleVM/src/vmachine.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"vmemory.c"
+	"vio.c"
+	"vconsts.c"
+
+1324702625 source:/home/reid/Projects/programming/SimpleVM/src/vconsts.c
+
+1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vio.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"vmtypes.h"
+
+1324749164 source:/home/reid/Projects/programming/SimpleVM/src/vmachine.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+	"linklist.h"
+
+1323211089 source:/home/reid/Projects/programming/SimpleVM/src/vmath.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+	"vmath.h"
+
+1324749181 source:/home/reid/Projects/programming/SimpleVM/src/vmemory.c
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1324702637 source:/home/reid/Projects/programming/SimpleVM/src/vmtypes.c
+	"linklist.h"
+
+1324702635 /home/reid/Projects/programming/SimpleVM/src/vmtypes.h
+	"linklist.h"
+
+1324686051 /home/reid/Projects/programming/SimpleVM/src/vmachine.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+
+1324702630 /home/reid/Projects/programming/SimpleVM/src/vmemory.h
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1324702623 /home/reid/Projects/programming/SimpleVM/src/vconsts.h
+
+1323211089 /home/reid/Projects/programming/SimpleVM/src/vmath.h
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+
+1323193094 source:/home/reid/Projects/SimpleVM/src/main.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vmachine.h"
+
+1323191010 /home/reid/Projects/SimpleVM/src/vmtypes.h
+
+1323191010 /home/reid/Projects/SimpleVM/src/vmachine.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+	"vmath.h"
+
+1323191010 /home/reid/Projects/SimpleVM/src/vmemory.h
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1323191010 /home/reid/Projects/SimpleVM/src/vconsts.h
+
+1323191010 /home/reid/Projects/SimpleVM/src/vmath.h
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+
+1323191010 source:/home/reid/Projects/SimpleVM/src/vconsts.c
+
+1323191010 source:/home/reid/Projects/SimpleVM/src/vio.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"vmtypes.h"
+
+1323195155 source:/home/reid/Projects/SimpleVM/src/vmachine.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	<ctype.h>
+	"vmemory.h"
+	"vconsts.h"
+	"vmath.h"
+	<ctype.h>
+
+1323191010 source:/home/reid/Projects/SimpleVM/src/vmath.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vconsts.h"
+	"vmath.h"
+
+1323191010 source:/home/reid/Projects/SimpleVM/src/vmemory.c
+	<stdio.h>
+	<stdlib.h>
+	"vconsts.h"
+	"vmtypes.h"
+
+1323191010 source:/home/reid/Projects/SimpleVM/src/vmtypes.c
+
+1324702638 source:/home/reid/Projects/programming/SimpleVM/src/linklist.c
+	"linklist.h"
+	<stdlib.h>
+
+1324701078 /home/reid/Projects/programming/SimpleVM/src/linklist.h
+
+1324686637 source:/home/reid/Projects/programming/SimpleVM/src/svm.c
+	<stdio.h>
+	<stdlib.h>
+	"vmtypes.h"
+	"vmachine.h"
+

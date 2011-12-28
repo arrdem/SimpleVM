@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="P builder" />
+	<File name="linklist.c" open="1" top="0" tabpos="7">
+		<Cursor position="354" topLine="0" />
+	</File>
+	<File name="linklist.h" open="0" top="0" tabpos="9">
+		<Cursor position="189" topLine="0" />
+	</File>
+	<File name="svm.c" open="1" top="0" tabpos="8">
+		<Cursor position="482" topLine="0" />
+	</File>
+	<File name="svma.c" open="1" top="0" tabpos="9">
+		<Cursor position="527" topLine="9" />
+	</File>
+	<File name="vconsts.c" open="1" top="0" tabpos="11">
+		<Cursor position="682" topLine="0" />
+	</File>
+	<File name="vconsts.h" open="1" top="0" tabpos="10">
+		<Cursor position="619" topLine="0" />
+	</File>
+	<File name="vmachine.c" open="1" top="0" tabpos="2">
+		<Cursor position="780" topLine="9" />
+	</File>
+	<File name="vmachine.h" open="1" top="0" tabpos="1">
+		<Cursor position="700" topLine="0" />
+	</File>
+	<File name="vmemory.c" open="1" top="0" tabpos="4">
+		<Cursor position="310" topLine="9" />
+	</File>
+	<File name="vmemory.h" open="1" top="0" tabpos="3">
+		<Cursor position="492" topLine="0" />
+	</File>
+	<File name="vmtypes.c" open="1" top="0" tabpos="6">
+		<Cursor position="491" topLine="0" />
+	</File>
+	<File name="vmtypes.h" open="1" top="0" tabpos="5">
+		<Cursor position="455" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>

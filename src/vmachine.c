@@ -42,7 +42,7 @@ char* vm_machine_upper(char *str) {
 void vm_machine_print(VMachine* m) {
     int k = 0, i;
     while(k <= m->lines) {
-        printf("[%-5i] %5s ", k, m->code[k].text, m->code[k].code[0]);
+        printf("[%-3i] %5s ", k, m->code[k].text, m->code[k].code[0]);
         i = 0;
         while(i < 7) {
             printf("%-10i ", m->code[k].code[i]);
@@ -111,6 +111,8 @@ VMachine* vm_machine_binary(FILE* stream) {
         printf("[INIT] WARNING - BYTECODE HAS A STRANGE SIZE\n");
         printf("      SIZE:%i\n", fsize);
         printf(" INT COUNT:%i\n", (fsize - VMHeaderSize*sizeof(int)/sizeof(int)));
+    } else {
+        printf("[INIT] INSTRUCTION LOAD...                                               [OKAY]\n");
     }
 
     while(1) {
@@ -200,7 +202,8 @@ VMachine* vm_machine_ascii(FILE* stream) {
         if(f == EOF) {
             memset(data[data_used].text, 0, sizeof(char) * 10);
             goto die;
-        } else {
+        }
+        else {
             data[data_used].text = vm_machine_upper(data[data_used].text);
             data[data_used].code[0] = vm_machine_string_hash(data[data_used].text);
         }
@@ -211,7 +214,8 @@ VMachine* vm_machine_ascii(FILE* stream) {
             if(f == EOF) {
                 data[data_used].code[k-1] = 0;
                 goto die;
-            } else if(f == 0) {
+            }
+            else if(f == 0) {
                 data[data_used].code[k-1] = 0;
             }
         }
@@ -251,7 +255,8 @@ int vm_machine_eval(VMachine* m, int line) {
         // out of line buffer error state
         m->errcode = 1;
         m->errmsg = "CURSOR OUT OF LINE BUFFER";
-    } else {
+    }
+    else {
         srand(time(NULL));
         int i;
         switch(m->code[line].code[0]) {
@@ -281,7 +286,8 @@ int vm_machine_eval(VMachine* m, int line) {
                     m->errcode = 2;
                     m->errmsg = "INTEGER OVERFLOW";
                     goto finally;
-                } else {
+                }
+                else {
                     // the addition is fine...
                     vm_ram_assign_static(m->memory,
                                          m->code[line].code[3], i
@@ -306,7 +312,8 @@ int vm_machine_eval(VMachine* m, int line) {
                     m->errcode = 2;
                     m->errmsg = "INTEGER UNDERFLOW";
                     goto finally;
-                } else {
+                }
+                else {
                     // the addition is fine...
                     vm_ram_assign_static(m->memory,
                                          m->code[line].code[3], i
@@ -331,7 +338,8 @@ int vm_machine_eval(VMachine* m, int line) {
                     m->errcode = 2;
                     m->errmsg = "INTEGER UNDERFLOW";
                     goto finally;
-                } else {
+                }
+                else {
                     // the addition is fine...
                     vm_ram_assign_static(m->memory,
                                          m->code[line].code[3], i
@@ -356,7 +364,8 @@ int vm_machine_eval(VMachine* m, int line) {
                     m->errcode = 2;
                     m->errmsg = "INTEGER UNDERFLOW";
                     goto finally;
-                } else {
+                }
+                else {
                     // the addition is fine...
                     vm_ram_assign_static(m->memory,
                                          m->code[line].code[3], i
@@ -485,6 +494,11 @@ int vm_machine_eval(VMachine* m, int line) {
                                                    m->code[line].code[1])));
                 break;
 
+            case 2193763:
+                // GOTO N1 (go to line C+N1)
+                line = line + m->code[line].code[1];
+                return line;
+
             case 68006735:
                 // GOTOR N1 (go to line number in register)
                 line = vm_ram_get(m->memory, m->code[line].code[1]);
@@ -499,7 +513,8 @@ int vm_machine_eval(VMachine* m, int line) {
                 // IF N1
                 if(vm_ram_get(m->memory, m->code[line].code[1])) {
                     line += 1;
-                } else {
+                }
+                else {
                     line += 2;
                 }
                 return line;
@@ -643,11 +658,13 @@ void vm_machine_run(VMachine* m) {
         if((cursor->data) && (i >= 0) && (m->errcode == 0)) {
             t->line = i;
             cursor = cursor->next;
-        } else if(i == -1) {
+        }
+        else if(i == -1) {
             // this is the "kill me" code
             vm_machine_thread_del(m,
                                   t->id);
-        } else {
+        }
+        else {
             // deal with error code... how?
             printf("[ERROR ON LINE %i] %s", t->line, m->errmsg);
             exit(1); // die!

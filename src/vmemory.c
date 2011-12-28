@@ -21,7 +21,7 @@ void vm_ram_display(VMRam* ram) {
     VMBlock b;
     while(i < ram->size) {
         b = ram->regs[i];
-        printf("[%-5i] used:%-5i type:%-8X data:%-8X %-10i\n", i++, b.used, b.type, b.ptr, b.ptr);
+        printf("[%-3i] used:%-5i type:%-8X data:%-8X %-10i\n", i++, b.used, b.type, b.ptr, b.ptr);
     }
 }
 
@@ -139,7 +139,8 @@ void vm_ram_assign_dynamic(VMRam *ram, int value) {
         ram->regs[ram->used].used = 1;
         ram->regs[ram->used].type = VMInteger;
 
-    } else {
+    }
+    else {
         printf("[ASSIGN] WARNING - ALLOCATED TO BLOCK %-10i    [OKAY]\n", ram->used);
         VMBlock * a = vm_ram_malloc_dynamic(ram);
         a->ptr = value;

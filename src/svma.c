@@ -15,17 +15,7 @@
 #include "vmtypes.h"
 #include "vmachine.h"
 
-char** USAGE = "usage: svmc <source file> <output file>\n";
-
-
-char **outfile(char *data) {
-    int l = strlen(data);
-    int d = 1;
-    while(data[l-d] != '.') d++;
-    char *o = malloc(sizeof(char) * ((d > 2) ? l : l+2));
-    memcpy(o, data, sizeof(char) * (l-d));
-}
-
+char** USAGE = "usage: svma <source file> <output file>\n";
 
 /**
  * ARGV[0] is the binary
@@ -40,7 +30,8 @@ int main(int argc, char **argv) {
 
     if(argc < 2) {
         printf("%s", USAGE);
-    } else {
+    }
+    else {
         in = fopen(argv[1], "r");
         if(in) {
             turing = vm_machine_ascii(in);
@@ -59,6 +50,8 @@ int main(int argc, char **argv) {
             }
             fflush(out);
             fclose(out);
+
+            vm_machine_delete(turing);
         } else {
             printf("ERROR - BAD FILE : %s\n",argv[i]);
         }
