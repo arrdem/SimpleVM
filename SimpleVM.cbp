@@ -28,34 +28,32 @@
 		<Compiler>
 			<Add option="-g" />
 		</Compiler>
-		<Unit filename="linklist.c">
+		<Unit filename="src/linklist.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="linklist.h" />
-		<Unit filename="svm.c">
-			<Option compilerVar="CC" />
-			<Option target="Release" />
-		</Unit>
-		<Unit filename="svma.c">
-			<Option compilerVar="CC" />
-			<Option target="P builder" />
-		</Unit>
-		<Unit filename="vconsts.c">
+		<Unit filename="src/linklist.h" />
+		<Unit filename="src/svm.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="vconsts.h" />
-		<Unit filename="vmachine.c">
+		<Unit filename="src/svma.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="vmachine.h" />
-		<Unit filename="vmemory.c">
+		<Unit filename="src/vconsts.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="vmemory.h" />
-		<Unit filename="vmtypes.c">
+		<Unit filename="src/vconsts.h" />
+		<Unit filename="src/vmachine.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="vmtypes.h" />
+		<Unit filename="src/vmachine.h" />
+		<Unit filename="src/vmemory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/vmemory.h" />
+		<Unit filename="src/vmtypes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/vmtypes.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
