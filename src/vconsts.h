@@ -19,9 +19,6 @@ const int
           VMNotFound,
           VMPtr,
           VMInteger,
-          VMBoolean,
-          VMArray,
-          VMStack,
           VMHeaderSize,
 // version ID
           VMMajorVersion,

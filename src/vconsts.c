@@ -19,9 +19,6 @@ const int
           VMNotFound  = 0xFEEDFACE,
           VMPtr       = 0,
           VMInteger   = 0xAAAAAAAA,
-          VMBoolean   = 0xBBBBBBBB,
-          VMArray     = 0xCCCCCCCC,
-          VMStack     = 0xDDDDDDDD,
           VMHeaderSize   = 2,
 // VM version ID
           VMMajorVersion = 1,
