@@ -14,8 +14,15 @@
 
 typedef struct {
     int      ptr;
-    int      type;
-    int      used;
+    unsigned int meta;
+    /**
+     * meta is 32 bits of unsigned goodness.
+     * bit 0    - block used (has it been assigned to ever) (zeroed on free())
+     * bit 1    - block lock (is it locked to pointer only)
+     * bit 2    - block is value an int
+     * bit 3    - block is value a pointer type
+     * bit 4    - the pointer is to heap not registers
+    */
 } VMBlock;
 
 typedef struct {
