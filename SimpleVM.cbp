@@ -23,6 +23,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-liberty" />
+				</Compiler>
 			</Target>
 		</Build>
 		<Compiler>

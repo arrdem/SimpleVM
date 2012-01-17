@@ -27,5 +27,13 @@ void vm_ram_free(VMRam*, int, int);
 void vm_ram_assign_static(VMRam*, int, int);
 void vm_ram_assign_dynamic(VMRam, int);
 
+void vm_ram_addrmeta_type_set(VMRam*, int, int);
+void vm_ram_addrmeta_used_set(VMRam*, int, int);
+void vm_ram_addrmeta_heap_set(VMRam*, int, int);
+
+int vm_ram_addrmeta_type(VMRam*, int);
+int vm_ram_addrmeta_used(VMRam*, int);
+int vm_ram_addrmeta_heap(VMRam*, int);
+
 VMBlock * vm_ram_malloc_dynamic(VMRam*);
 VMBlock * vm_ram_malloc_static(VMRam*, int);
