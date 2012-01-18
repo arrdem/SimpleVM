@@ -264,23 +264,23 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 75259:
                 // LET N1 N2
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      m->code[line].code[2]);
                 break;
 
             case 64641:
                 // ADD N1 N2 N3
-                i = (vm_ram_get(m->memory,
+                i = (vm_ram_stack_get(m->memory,
                                 m->code[line].code[1]) +
-                                vm_ram_get(m->memory,
+                                vm_ram_stack_get(m->memory,
                                            m->code[line].code[2]));
 
-                if ((vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        vm_ram_get(m->memory, m->code[line].code[2]) &&
+                if ((vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i < 0)) ||
-                    (!vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        !vm_ram_get(m->memory, m->code[line].code[2]) &&
+                    (!vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        !vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0))) {
                     // an integer overflow has occured...
                     m->errcode = 2;
@@ -289,7 +289,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 }
                 else {
                     // the addition is fine...
-                    vm_ram_assign_static(m->memory,
+                    vm_ram_stack_assign(m->memory,
                                          m->code[line].code[3], i
                                          );
                 }
@@ -297,16 +297,16 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 82464:
                 // SUB N1 N2 N3
-                i = (vm_ram_get(m->memory,
+                i = (vm_ram_stack_get(m->memory,
                                 m->code[line].code[1]) -
-                                vm_ram_get(m->memory,
+                                vm_ram_stack_get(m->memory,
                                            m->code[line].code[2]));
 
-                if ((vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        vm_ram_get(m->memory, m->code[line].code[2]) &&
+                if ((vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0)) ||
-                    (!vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        !vm_ram_get(m->memory, m->code[line].code[2]) &&
+                    (!vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        !vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i < 0))) {
                     // an integer overflow has occured...
                     m->errcode = 2;
@@ -315,7 +315,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 }
                 else {
                     // the addition is fine...
-                    vm_ram_assign_static(m->memory,
+                    vm_ram_stack_assign(m->memory,
                                          m->code[line].code[3], i
                                          );
                 }
@@ -323,16 +323,16 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 76708:
                 // MUL N1 N2 N3
-                i = (vm_ram_get(m->memory,
+                i = (vm_ram_stack_get(m->memory,
                                 m->code[line].code[1]) *
-                                vm_ram_get(m->memory,
+                                vm_ram_stack_get(m->memory,
                                            m->code[line].code[2]));
 
-                if ((!vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        vm_ram_get(m->memory, m->code[line].code[2]) &&
+                if ((!vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0)) ||
-                    (vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        !vm_ram_get(m->memory, m->code[line].code[2]) &&
+                    (vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        !vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0))) {
                     // an integer overflow has occured...
                     m->errcode = 2;
@@ -341,7 +341,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 }
                 else {
                     // the addition is fine...
-                    vm_ram_assign_static(m->memory,
+                    vm_ram_stack_assign(m->memory,
                                          m->code[line].code[3], i
                                          );
                 }
@@ -349,16 +349,16 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 67697:
                 // DIV N1 N2 N3
-                i = (vm_ram_get(m->memory,
+                i = (vm_ram_stack_get(m->memory,
                                 m->code[line].code[1]) /
-                                vm_ram_get(m->memory,
+                                vm_ram_stack_get(m->memory,
                                            m->code[line].code[2]));
 
-                if ((!vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        vm_ram_get(m->memory, m->code[line].code[2]) &&
+                if ((!vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0)) ||
-                    (vm_ram_get(m->memory, m->code[line].code[1]) &&
-                        !vm_ram_get(m->memory, m->code[line].code[2]) &&
+                    (vm_ram_stack_get(m->memory, m->code[line].code[1]) &&
+                        !vm_ram_stack_get(m->memory, m->code[line].code[2]) &&
                         (i > 0))) {
                     // an integer overflow has occured...
                     m->errcode = 2;
@@ -367,7 +367,7 @@ int vm_machine_eval(VMachine* m, int line) {
                 }
                 else {
                     // the addition is fine...
-                    vm_ram_assign_static(m->memory,
+                    vm_ram_stack_assign(m->memory,
                                          m->code[line].code[3], i
                                          );
                 }
@@ -375,42 +375,42 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 76514:
                 // MOD N1 N2 N3
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) %
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 2285:
                 // GT N1 N2 N3
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) >
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 2440:
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) <
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 66219796:
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) ==
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
@@ -427,19 +427,19 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2467642:
                 // PUTI N1
-                printf("[PUTI LINE %i] %i\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
+                printf("[PUTI LINE %i] %i\n", line, vm_ram_stack_get(m->memory, m->code[line].code[1]));
                 break;
 
             case 2467636:
                 // PUTC N1
-                printf("%c\n", line, vm_ram_get(m->memory, m->code[line].code[1]));
+                printf("%c\n", line, vm_ram_stack_get(m->memory, m->code[line].code[1]));
                 break;
 
             case 2184147:
                 // GETI N1
                 printf("[GETI LINE %i - REG %i] > ", line,  m->code[line].code[1]);
                 scanf("%i", i);
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      i);
                 break;
@@ -448,49 +448,49 @@ int vm_machine_eval(VMachine* m, int line) {
                 //GETC N1
                 printf("[GETC LINE %i - REG %i] > ", line, m->code[line].code[1]);
                 scanf("%c", i);
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      i);
                 break;
 
             case 2531:
                 // OR N1 N2 N3
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) ||
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 64951:
                 // AND N1 N2 N3
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) &&
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 87099:
                 // XOR N1 N2 N3le
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[3],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1]) ^
-                                        vm_ram_get(m->memory,
+                                        vm_ram_stack_get(m->memory,
                                                    m->code[line].code[2])
                                      ));
                 break;
 
             case 77491:
                 // NOT N1 N2
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[2],
-                                     (!vm_ram_get(m->memory,
+                                     (!vm_ram_stack_get(m->memory,
                                                    m->code[line].code[1])));
                 break;
 
@@ -501,7 +501,7 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 68006735:
                 // GOTOR N1 (go to line number in register)
-                line = vm_ram_get(m->memory, m->code[line].code[1]);
+                line = vm_ram_stack_get(m->memory, m->code[line].code[1]);
                 return line;
 
             case 68006729:
@@ -511,7 +511,7 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2333:
                 // IF N1
-                if(vm_ram_get(m->memory, m->code[line].code[1])) {
+                if(vm_ram_stack_get(m->memory, m->code[line].code[1])) {
                     line += 1;
                 }
                 else {
@@ -522,12 +522,12 @@ int vm_machine_eval(VMachine* m, int line) {
             case 2558355:
                 // SWAP N1 N2
                 // XOR the pointers!
-                i = vm_ram_get(m->memory, m->code[line].code[1]);
-                vm_ram_assign_static(m->memory,
+                i = vm_ram_stack_get(m->memory, m->code[line].code[1]);
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
-                                     vm_ram_get(m->memory,
+                                     vm_ram_stack_get(m->memory,
                                                 m->code[line].code[2]));
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      i);
 
@@ -535,9 +535,9 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2251860:
                 // add 1 to the register
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                  m->code[line].code[1])
                                         + 1)
                                      );
@@ -545,9 +545,9 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2094256:
                 // subtract 1
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                  m->code[line].code[1])
                                         - 1)
                                      );
@@ -555,28 +555,34 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2360863:
                 // MCPY N1 N2
-                vm_ram_assign_static(m->memory,
+                // TODO - ADD METADATA COPY
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[2],
-                                     (vm_ram_get(m->memory,
+                                     (vm_ram_stack_get(m->memory,
                                                  m->code[line].code[1]))
                                      );
                 break;
 
             case 2513316:
                 // RGET N1 N2
-                vm_ram_assign_static(m->memory,
-                                     m->code[line].code[2],
-                                     (vm_ram_get(m->memory,
-                                                 vm_ram_get(m->memory,
-                                                            m->code[line].code[1])))
-                                     );
+                i = vm_ram_stack_get(m->memory, m->code[line].code[1]);
+                if(i >= 0) {
+                    // STACK CASE
+                    vm_ram_stack_assign(m->memory,
+                                         m->code[line].code[2],
+                                         vm_ram_stack_get(m->memory,i)
+                                         );
+                } else {
+                    // HEAP CASE
+
+                }
                 break;
 
             case 2524848:
                 // RSET N1 N2
-                vm_ram_assign_static(m->memory,
-                                     (vm_ram_get(m->memory,
-                                                 vm_ram_get(m->memory,
+                vm_ram_stack_assign(m->memory,
+                                     (vm_ram_stack_get(m->memory,
+                                                 vm_ram_stack_get(m->memory,
                                                             m->code[line].code[2]))),
                                      m->code[line].code[1]
                                      );
@@ -589,7 +595,7 @@ int vm_machine_eval(VMachine* m, int line) {
                           vm_thread(m->code[line].code[1],
                                     m->threadcount+1)
                           );
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[2],
                                      (m->threadcount++)+1);
                 m->threadcount++;
@@ -598,7 +604,7 @@ int vm_machine_eval(VMachine* m, int line) {
             case 2282794:
                 // JOIN N1
                 // kills the thread with the ID at register N1
-                i = vm_ram_get(m->memory,
+                i = vm_ram_stack_get(m->memory,
                                m->code[line].code[1]);
 
                 m->threadcount--;
@@ -612,14 +618,14 @@ int vm_machine_eval(VMachine* m, int line) {
 
             case 2508635:
                 // RBIT N1 - get a random 1 or 0
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      rand()%2);
                 break;
 
             case 2515517:
                 // RINT N1 - get a random int, save to N1
-                vm_ram_assign_static(m->memory,
+                vm_ram_stack_assign(m->memory,
                                      m->code[line].code[1],
                                      rand());
                 break;

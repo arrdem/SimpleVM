@@ -8,7 +8,7 @@ typedef struct {
 
 void ll_insert(ll*, void*);
 int ll_search(ll*, void*);
-int ll_c_delete_node(ll*, void*);
+int ll_c_delete_byval(ll*, void*);
 void ll_c_delte(ll*, ll*);
 
 #endif // _LINKLIST_H_

@@ -8,6 +8,7 @@
  */
 
 #include "linklist.h"
+#include "stack.h"
 
 #ifndef _VMBLOCK_H_
 #define _VMBLOCK_H_
@@ -26,9 +27,16 @@ typedef struct {
 } VMBlock;
 
 typedef struct {
-    VMBlock* regs;
-    int      size;
-    int      used;
+    // the primary memory, registers
+    VMBlock* stack;
+    int      stack_size;
+    int      stack_used;
+
+    // the new memory, the "heap"
+    int**    heap;
+    int      heap_size;
+    int      heap_used;
+    stack*   heap_unused;
 } VMRam;
 
 typedef struct {
@@ -53,7 +61,5 @@ typedef struct {
     char*    errmsg;
     int      errcode;
 } VMachine;
-
-#define VMBlockSize sizeof(VMBlock);
 
 #endif

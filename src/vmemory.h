@@ -7,33 +7,33 @@
  *      lays out the prototypes for the VM's memory
  */
 
+#ifndef vmemory_h
+#define vmemory_h
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "vconsts.h"
 #include "vmtypes.h"
 
-VMRam * vm_ram_init();
+VMRam *vm_ram_init                  ();
+void vm_ram_rst                     (VMRam*);
+void vm_ram_display                 (VMRam*);
 
-void vm_ram_rst(VMRam*);
+int  vm_ram_stack_get               (VMRam*, int);
+void vm_ram_stack_grow              (VMRam*);
+void vm_ram_stack_free              (VMRam*, int, int);
+void vm_ram_stack_assign            (VMRam*, int, int);
+void vm_ram_stack_addrmeta_type_set (VMRam*, int, int);
+void vm_ram_stack_addrmeta_used_set (VMRam*, int, int);
+void vm_ram_stack_addrmeta_heap_set (VMRam*, int, int);
+int  vm_ram_stack_addrmeta_type     (VMRam*, int);
+int  vm_ram_stack_addrmeta_used     (VMRam*, int);
+int  vm_ram_stack_addrmeta_heap     (VMRam*, int);
 
-void vm_ram_display(VMRam*);
-int vm_ram_get(VMRam*, int);
-
-void vm_ram_grow(VMRam*);
-void vm_ram_compact(VMRam*);
-void vm_ram_free(VMRam*, int, int);
-
-void vm_ram_assign_static(VMRam*, int, int);
-void vm_ram_assign_dynamic(VMRam, int);
-
-void vm_ram_addrmeta_type_set(VMRam*, int, int);
-void vm_ram_addrmeta_used_set(VMRam*, int, int);
-void vm_ram_addrmeta_heap_set(VMRam*, int, int);
-
-int vm_ram_addrmeta_type(VMRam*, int);
-int vm_ram_addrmeta_used(VMRam*, int);
-int vm_ram_addrmeta_heap(VMRam*, int);
-
-VMBlock * vm_ram_malloc_dynamic(VMRam*);
-VMBlock * vm_ram_malloc_static(VMRam*, int);
+int  vm_ram_heap_get                (VMRam*, int);
+void vm_ram_heap_grow               (VMRam*);
+void vm_ram_heap_free               (VMRam*, int);
+int  vm_ram_heap_malloc             (VMRam*, int);
+void vm_ram_heap_free               (VMRam*, int);
+#endif
