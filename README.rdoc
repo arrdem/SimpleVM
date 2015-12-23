@@ -1,7 +1,7 @@
 = Simple VM
 Simple VM is just what it claims to be, a simple virtual machine in pure ANSI C
 designed to emulate an infinite memory register or Turing machine. SimpleVM 
-provides a RISC archetecture with builtins such as pointers, integer arithmetic,
+provides a RISC architecture with builtins such as pointers, integer arithmetic,
 and conditional branching.
 
 == Current State
@@ -28,7 +28,7 @@ transferring VM code somewhat like Pascal's P-code of Java's .class files.
  * Integer math                                                     (v 1.2)
  * Case-insensitivity                                               (v 1.0)
  * Dynamic memory resizing                                          (v 1.0)
- * RISC archetecture                                                (v 1.0)
+ * RISC architecture                                                (v 1.0)
 
 == Instruction Set
 REGS[ ] is the name I use for the machine's RAM registers. C is the name I use
